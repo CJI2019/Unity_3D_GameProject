@@ -23,7 +23,9 @@ public class PlayerController : MonoBehaviour
     Vector2 movement;
     Vector3 airVelocity; // 점프 시 수평 속도 
     float verticalVelocity = 0f;
+    bool JumpIsPressed = false;
     bool isJump = false;
+    bool triggerJump = false;
     bool isGrounded = true;
 
     void Start()
@@ -41,15 +43,18 @@ public class PlayerController : MonoBehaviour
 
     void JumpAndGravity()
     {
-        if (isGrounded)
+        isJump = JumpIsPressed;
+
+        if (isGrounded && !triggerJump)
         {
             if (isJump)
             {
                 lastGroundMoveDir = moveDir; // 점프 입력 직후 마지막 지상 이동 방향 저장
 
                 float g = gravity;
-                verticalVelocity += Mathf.Sqrt(2 * -g * jumpHeight); // 등가속도
+                verticalVelocity = Mathf.Sqrt(2 * -g * jumpHeight); // 등가속도
                 airVelocity.Set(moveDir.x * airControlFactor, 0f, moveDir.z * airControlFactor);
+                triggerJump = true;
             }
             else
             {
@@ -61,8 +66,8 @@ public class PlayerController : MonoBehaviour
         else
         {
             verticalVelocity += gravity * Time.deltaTime;
-
             isJump = false;
+            triggerJump = false;
         }
     }
 
@@ -99,7 +104,7 @@ public class PlayerController : MonoBehaviour
         
         if (isGrounded) {
             velocity = moveDir * moveSpeed;
-        } 
+        }
         else 
         { // 공중 이동
             if(lastGroundMoveDir != Vector3.zero)
@@ -135,7 +140,7 @@ public class PlayerController : MonoBehaviour
     }
     public void OnJump(InputValue value)
     {
-        isJump = value.isPressed;
+        JumpIsPressed = value.isPressed;
     }
 
 }
