@@ -5,61 +5,29 @@ public class OrbitWeapon : WeaponBase
 {
     [SerializeField] float rotateSpeed = 100f;
     [SerializeField] float distance = 4f;
-    [SerializeField] float attackRange = 2f;    // 공격 범위
-    LayerMask monsterLayer;
-    Collider[] hitColliders = new Collider[20];
 
-    protected override void Start()
+    public void Initialize(float angle)
     {
-        base.Start();
-
-        monsterLayer = LayerMask.GetMask("Monster");
+        // 회전 시작 로컬 위치 및 로컬 각도 조정
+        transform.localRotation = Quaternion.Euler(90f,0f,0f);
+        transform.localPosition = new Vector3(0f,0f,distance);        
+        transform.RotateAround(owner.position, Vector3.up, angle);
     }
+
     protected override void Update()
     {
-        base.Update();
+        // 회전하면서 닿는 모든 생명체에게 데미지를 가하므로 추가적인 공격 로직은 필요없음.
         OrbitAroundTarget();
     }
 
     void OrbitAroundTarget()
     {
         // 플레이어 주위를 공전
-        transform.RotateAround(target.position, Vector3.up, rotateSpeed * Time.deltaTime);
-
-        // 플레이어와의 거리 유지
-        Vector3 desiredPos = (transform.position - target.position).normalized * distance + target.position;
-        transform.position = desiredPos;
+        transform.RotateAround(owner.position, Vector3.up, rotateSpeed * Time.deltaTime);
     }
 
-    protected override void Attack()
+    public override void Attack()
     {
-        // 범위 내의 몬스터들을 검사
-        // OverlapSphereNonAlloc은 메모리 할당(GC)을 하지 않아 성능에 유리함
-        int monsterCount = Physics.OverlapSphereNonAlloc(transform.position, attackRange, hitColliders, monsterLayer);
-
-        // 발견된 몬스터들에게 데미지 전달
-        for (int i = 0; i < monsterCount; i++)
-        {
-            // 이전에 만든 Monster 추상 클래스의 TakeDamage 호출
-            if (hitColliders[i].TryGetComponent<Monster>(out var monster))
-            {
-                monster.TakeDamage(damage);
-                
-                // 공격 이펙트 생성 등 추가 로직
-                PlayHitEffect(hitColliders[i].transform.position);
-            }
-        }
-    }
-
-    // 범위 시각화 (에디터 뷰에서 확인용)
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
-    }
-
-    private void PlayHitEffect(Vector3 position) 
-    {
-        /* 이펙트 로직 */ 
+        
     }
 }
