@@ -1,8 +1,4 @@
-using Unity.VisualScripting;
-using UnityEditor.Callbacks;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
@@ -16,14 +12,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float airControlFactor = 0.6f;
     [SerializeField] LayerMask groundLayer;
 
-    PlayerInput playerInput;
+    PlayerInputManager playerInput;
     CharacterController controller;
     Vector3 moveDir;
     Vector3 lastGroundMoveDir;
-    Vector2 movement;
     Vector3 airVelocity; // 점프 시 수평 속도 
     float verticalVelocity = 0f;
-    bool JumpIsPressed = false;
     bool isJump = false;
     bool triggerJump = false;
     bool isGrounded = true;
@@ -31,7 +25,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         controller = GetComponent<CharacterController>();
-        playerInput = GetComponent<PlayerInput>();
+        playerInput = GetComponent<PlayerInputManager>();
     }
 
     void Update()
@@ -43,7 +37,7 @@ public class PlayerController : MonoBehaviour
 
     void JumpAndGravity()
     {
-        isJump = JumpIsPressed;
+        isJump = playerInput.jump;
 
         if (isGrounded && !triggerJump)
         {
@@ -90,13 +84,13 @@ public class PlayerController : MonoBehaviour
 
     void Move()
     {
-        var camera = playerInput.camera;
+        var camera = playerInput.GetCamera();
 
         Vector3 look = camera.transform.forward;
         Vector3 right = camera.transform.right;
 
-        var frontMove = look * movement.y;
-        var rightMove = right * movement.x;
+        var frontMove = look * playerInput.move.y;
+        var rightMove = right * playerInput.move.x;
         frontMove.y = 0f; rightMove.y = 0f;
 
         Vector3 velocity;
@@ -117,7 +111,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if(movement == Vector2.zero)
+        if(playerInput.move == Vector2.zero)
         {
             lastGroundMoveDir.Set(0f,0f,0f);
         }
@@ -134,13 +128,4 @@ public class PlayerController : MonoBehaviour
             transformPlayerModel.rotation = Quaternion.Slerp(transformPlayerModel.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
     }
-    public void OnMove(InputValue value)
-    {
-        movement = value.Get<Vector2>();
-    }
-    public void OnJump(InputValue value)
-    {
-        JumpIsPressed = value.isPressed;
-    }
-
 }
