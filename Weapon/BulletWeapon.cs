@@ -5,21 +5,20 @@ public class BulletWeapon : WeaponBase
     [SerializeField] float attackRange = 10.0f;
     [SerializeField] GameObject bulletModel;
     [SerializeField] float speed = 3f;
-    Collider ownerCollider;
-    Transform parent;
+    Collider weaponCollider;
     Vector3 dir;
     Vector3 attackStartPos;
     public override float AttackRange => attackRange;
 
     protected override void Awake()
     {
-        ownerCollider = GetComponent<Collider>();
+        weaponCollider = GetComponent<Collider>();
     }
     public void Initialize(Transform parent,float delay)
     {
-        transform.SetParent(null);
+        transform.SetParent(PoolManager.Instance.gameObject.transform);
         bulletModel.SetActive(false);
-        this.parent = parent;
+        this.owner = parent;
         timer -= delay;
     }
 
@@ -77,7 +76,7 @@ public class BulletWeapon : WeaponBase
 
     public override void Attack()
     {
-        transform.position = parent.position;
+        transform.position = owner.position;
         attackStartPos = transform.position;
         bulletModel.SetActive(true);
 
@@ -86,14 +85,14 @@ public class BulletWeapon : WeaponBase
         {
             bulletModel.SetActive(false);
         }
-
-        ownerCollider.enabled = true;
+        
+        weaponCollider.enabled = true;
     }
 
     protected override void HandleTrigger(Collider other)
     {
         base.HandleTrigger(other);
         bulletModel.SetActive(false);
-        ownerCollider.enabled = false;
+        weaponCollider.enabled = false;
     }
 }

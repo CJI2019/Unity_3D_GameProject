@@ -12,7 +12,7 @@ public class OrbitWeaponManager : WeaponManager
         SetPoolKey(poolKey);
         RegisterWeapon(weaponPrefab,poolKey);
         // 레벨과 무기 개수에 따라서 업데이트 되어야함.
-        // AddWeapon<OrbitWeapon>(10);
+        AddWeapon<OrbitWeapon>(1);
     }
     public override void UpdateWeapons()
     {

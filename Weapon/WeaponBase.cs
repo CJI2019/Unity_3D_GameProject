@@ -13,7 +13,6 @@ public abstract class WeaponBase : MonoBehaviour ,IAttacker , IPoolable , IWeapo
 
     public virtual float AttackRange => throw new System.NotImplementedException();
     public float AttackCoolDown => attackRate;
-    public int level { get; set; } = 1;
 
     public abstract void Attack();
     protected virtual void Awake()

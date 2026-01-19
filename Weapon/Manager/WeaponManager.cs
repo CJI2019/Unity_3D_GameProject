@@ -5,6 +5,7 @@ using UnityEngine;
 public abstract class WeaponManager : MonoBehaviour
 {
     protected List<IWeapon> activeWeapons;
+    protected int weaponLevel { get; set; } = 1;
     string poolKey;
     //추상 메서드
     public abstract void UpdateWeapons();
