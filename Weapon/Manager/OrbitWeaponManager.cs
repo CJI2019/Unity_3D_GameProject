@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class OrbitWeaponManager : WeaponManager
@@ -12,8 +10,14 @@ public class OrbitWeaponManager : WeaponManager
         SetPoolKey(poolKey);
         RegisterWeapon(weaponPrefab,poolKey);
         // 레벨과 무기 개수에 따라서 업데이트 되어야함.
-        AddWeapon<OrbitWeapon>(1);
+        // AddWeapon<OrbitWeapon>(1);
     }
+
+    protected override void AddWeaponBySubClass(int count)
+    {
+        AddWeapon<OrbitWeapon>(count);
+    }
+
     public override void UpdateWeapons()
     {
         var length = activeWeapons.Count;

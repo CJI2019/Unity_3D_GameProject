@@ -5,15 +5,37 @@ using UnityEngine;
 public abstract class WeaponManager : MonoBehaviour
 {
     protected List<IWeapon> activeWeapons;
-    protected int weaponLevel { get; set; } = 1;
     string poolKey;
+    protected AbilityData weaponData;
     //추상 메서드
     public abstract void UpdateWeapons();
+    protected abstract void AddWeaponBySubClass(int count);
     //
     void Awake()
     {
         activeWeapons = new List<IWeapon>();
     }
+    // 활성화된 무기를 활성화 그룹에 추가한다.
+    void ActiveWeapon(IWeapon iWeapon)
+    {
+        activeWeapons.Add(iWeapon);
+    }
+    public void SetWeaponData(AbilityData abilityData)
+    {
+        weaponData = abilityData;
+
+        var addWeaponCount = weaponData.weaponCount - activeWeapons.Count;
+        if(addWeaponCount > 0)
+        {
+            AddWeaponBySubClass(addWeaponCount);
+        }
+
+        foreach(var weapon in activeWeapons)
+        {
+            weapon.SetDamage(abilityData.damage);
+        }
+    }
+   
     protected void SetPoolKey(string poolKey)
     {
         this.poolKey = poolKey;
@@ -23,7 +45,7 @@ public abstract class WeaponManager : MonoBehaviour
         var weaponPool = new GenericObjectPool<T>(prefab, 20, transform);
         PoolManager.Instance.RegisterPool(poolKey, weaponPool);
     }
-    public void AddWeapon<T>(int count) where T : Component, IPoolable, IWeapon
+    protected void AddWeapon<T>(int count) where T : Component, IPoolable, IWeapon
     {
         int beforeCount = activeWeapons.Count;
         // 기존 무기 반환
@@ -39,11 +61,7 @@ public abstract class WeaponManager : MonoBehaviour
 
         UpdateWeapons();
     }
-    // 활성화된 무기를 활성화 그룹에 추가한다.
-    void ActiveWeapon(IWeapon iWeapon)
-    {
-        activeWeapons.Add(iWeapon);
-    }
+    
     // 무기 종류를 활성 그룹에서 제거한다.
     protected void DeActiveWeapon<T>() where T : Component, IPoolable, IWeapon
     {

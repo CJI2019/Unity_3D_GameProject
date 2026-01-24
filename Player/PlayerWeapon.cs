@@ -1,26 +1,24 @@
 using UnityEngine;
 
-public enum ItemType 
-{ 
-    BulletWeapon,OrbitWeapon
-}
 
 public class PlayerWeapon : MonoBehaviour
 {
     [SerializeField] OrbitWeaponManager orbitWeaponManager;
     [SerializeField] BulletWeaponManager bulletWeaponManager;
 
-    public void ItemPickUp(ItemType itemType)
+    public void LevelUpWeapon(AbilityType weaponType, int level)
     {
-        switch (itemType)
+        AbilityData weapon = GameAbilityManager.Instance.GetWeaponData(weaponType,level);
+
+        Debug.Log($"{weapon.level} 레벨의 {weapon.name} 을 가져왔습니다.");
+
+        switch(weaponType)
         {
-            case ItemType.OrbitWeapon:
-                orbitWeaponManager.AddWeapon<OrbitWeapon>(1);
+            case AbilityType.BULLET:
+                bulletWeaponManager.SetWeaponData(weapon);
             break;
-            case ItemType.BulletWeapon:
-                bulletWeaponManager.AddWeapon<BulletWeapon>(1);
-            break;
-            default:
+            case AbilityType.ORBIT:
+                orbitWeaponManager.SetWeaponData(weapon);
             break;
         }
     }

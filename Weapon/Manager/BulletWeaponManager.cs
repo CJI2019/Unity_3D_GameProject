@@ -12,6 +12,11 @@ public class BulletWeaponManager : WeaponManager
         // 레벨과 무기 개수에 따라서 업데이트 되어야함.
         // AddWeapon<BulletWeapon>(10);
     }
+    protected override void AddWeaponBySubClass(int count)
+    {
+        AddWeapon<BulletWeapon>(count);
+    }
+
     public override void UpdateWeapons()
     {
         var length = activeWeapons.Count;

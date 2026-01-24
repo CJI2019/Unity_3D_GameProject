@@ -4,7 +4,6 @@ using UnityEngine;
 public abstract class WeaponBase : MonoBehaviour ,IAttacker , IPoolable , IWeapon
 {
     [Header("Common Settings")]
-    [SerializeField] protected long damage = 10;
     [SerializeField] protected float attackRate = 2f; // 공격 주기
 
     protected Transform owner;
@@ -13,6 +12,8 @@ public abstract class WeaponBase : MonoBehaviour ,IAttacker , IPoolable , IWeapo
 
     public virtual float AttackRange => throw new System.NotImplementedException();
     public float AttackCoolDown => attackRate;
+    [SerializeField] private long _damage = 10;
+    public long damage { get => _damage; set => _damage = value; }
 
     public abstract void Attack();
     protected virtual void Awake()
@@ -29,7 +30,15 @@ public abstract class WeaponBase : MonoBehaviour ,IAttacker , IPoolable , IWeapo
         if (timer >= attackRate)
         {
             timer = 0f;
-            Attack();            
+            Attack();
+        }
+    }
+    protected virtual void HandleTrigger(Collider other)
+    {
+        if (other.CompareTag(MONSTER_STRING))
+        {
+            var entity = other.GetComponent<LivingEntity>();
+            entity.TakeDamage(damage);
         }
     }
     public virtual void OnSpawn()
@@ -40,17 +49,10 @@ public abstract class WeaponBase : MonoBehaviour ,IAttacker , IPoolable , IWeapo
     {
         // throw new System.NotImplementedException();
     }
+
     void OnTriggerEnter(Collider other)
     {
         HandleTrigger(other);
     }
 
-    protected virtual void HandleTrigger(Collider other)
-    {
-        if (other.CompareTag(MONSTER_STRING))
-        {
-            var entity = other.GetComponent<LivingEntity>();
-            entity.TakeDamage(damage);
-        }
-    }
 }

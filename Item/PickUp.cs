@@ -16,5 +16,5 @@ public abstract class PickUp : MonoBehaviour , IPoolable
         }
     }
 
-    protected abstract void PickUpLogic(Collider player);
+    public abstract void PickUpLogic(Collider player);
 }
