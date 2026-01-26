@@ -6,10 +6,13 @@ public class ItemSensor : MonoBehaviour
     AbilityData abilityData;
     Collider ownerCollider;
     CapsuleCollider thisCollider;
+
     const string STRING_PICKUP = "PickUp";
+    public int Level {get => level;}
     int level = 0;
     float originRadius;
     float originHeight;
+
     void Awake()
     {
         var ownerPlayer = GetComponentInParent<CharacterController>();
@@ -23,17 +26,16 @@ public class ItemSensor : MonoBehaviour
     void OnEnable()
     {
         var gam = GameAbilityManager.Instance;
-        if(gam == null)
-        {
-            Debug.Log("gam is null");
-        }
         gam.OnInit += GameStartAbility;  
     }
 
     void OnDisable()
     {
         var gam = GameAbilityManager.Instance;
-        gam.OnInit -= GameStartAbility;
+        if (gam != null)
+        {
+            gam.OnInit -= GameStartAbility;
+        }
     }
 
     void GameStartAbility()
@@ -50,18 +52,26 @@ public class ItemSensor : MonoBehaviour
         }
     }
 
-    public void UpdateLevel(int level)
+    public void UpdateSensor()
     {
-        this.level = level;
-
         thisCollider.radius = originRadius;
         thisCollider.height = originHeight;
 
-        AbilityData ad = abilityDB.GetAbilityDataByPassiveLevel(AbilityType.ITEMRANGE,level);
-        Debug.Log(ad.name + "를 " + ad.level + "로 설정");
-        this.abilityData = ad;
-
         thisCollider.radius *= 1.0f + this.abilityData.damage / 100;
         thisCollider.height *= 1.0f + this.abilityData.damage / 100;
+    }
+
+    public void SetAbilityData(AbilityData abilityData)
+    {
+        this.abilityData = abilityData;
+        this.level = abilityData.level;
+
+        UpdateSensor();
+        Debug.Log(abilityData.name + "를 " + abilityData.level + "로 설정");
+    }
+
+    public AbilityData GetAbilityData()
+    {
+        return this.abilityData;
     }
 }

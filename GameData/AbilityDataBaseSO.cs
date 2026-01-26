@@ -175,6 +175,17 @@ public class AbilityDataBaseSO : ScriptableObject
     {
         return idAccessTable[abilityId];
     }
+    public AbilityData GetAbilityData(AbilityType abilityType,int level)
+    {
+        if(!abilityTypeLevelAccessTable[abilityType].ContainsKey(level))
+            return null;
+        return abilityTypeLevelAccessTable[abilityType][level];
+    }
+    public List<AbilityData> GetAllAbilityData()
+    {
+        return allAbility;
+    }
+
     // AbilityType 으로 데이터 리스트를 반환한다.(액티브, 패시브 등)
     public List<AbilityData> GetAbilityDataByAbilityType(string abilityType)
     {

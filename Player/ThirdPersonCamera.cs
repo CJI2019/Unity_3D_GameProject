@@ -19,8 +19,6 @@ public class ThirdPersonCamera : MonoBehaviour
     {
         lookAction = lookActionReference.action;
         lookAction.Enable();
-        Cursor.lockState = CursorLockMode.Locked; // 마우스 고정
-        Cursor.visible = false;                   // 커서 숨기기
     }
 
     void OnDisable()

@@ -1,21 +1,22 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Monster : LivingEntity , IAttacker
 {
-    MonsterAI ai;
+    public event Action<Monster> OnMonsterDead;
+    string poolKey = "";
 
-    public float AttackRange => throw new System.NotImplementedException();
-    public float AttackCoolDown => throw new System.NotImplementedException();
+    public float AttackRange {get;}
+    public float AttackCoolDown {get;}
 
     public void Attack()
     {
-        throw new System.NotImplementedException();
     }
 
-    void Start()
+    public void SetPoolKey(string poolKey)
     {
-        ai = GetComponent<MonsterAI>();
+        this.poolKey = poolKey;
     }
 
     protected override void DeathLogic()
@@ -26,5 +27,10 @@ public class Monster : LivingEntity , IAttacker
         {
             item.transform.position = transform.position;
         }
+        
+        OnMonsterDead?.Invoke(this);
+        OnMonsterDead = null;
+        
+        PoolManager.Instance.Return<Monster>(poolKey,this);
     }
 }

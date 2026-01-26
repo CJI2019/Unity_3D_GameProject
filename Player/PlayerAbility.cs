@@ -43,19 +43,26 @@ public class PlayerAbility : MonoBehaviour
         playerWeapon = GetComponent<PlayerWeapon>();
 
         AbilityData weapon = GameAbilityManager.Instance.GetRandomWeapon();
-        playerWeapon.LevelUpWeapon(weapon.abilityType, weapon.level);
         SyncAbility(weapon);
-        UpgradeItemSensor();
+        
+        AbilityData itemRange = gameAbilityMgr.GetAbilityData(AbilityType.ITEMRANGE,itemSensor.Level+1);
+        SyncAbility(itemRange);
     }
 
-    void SyncAbility(AbilityData data)
+    public void SyncAbility(AbilityData data)
     {
         holdAbilitys[data.abilityType] = data;
-    }
 
-    void UpgradeItemSensor()
-    {
-        itemSensor.UpdateLevel(1);
+        switch (data.abilityType)
+        {
+            case AbilityType.BULLET:
+            case AbilityType.ORBIT:
+                playerWeapon.LevelUpWeapon(data.abilityType, data.level);
+            break;
+            case AbilityType.ITEMRANGE:
+                itemSensor.SetAbilityData(data);
+            break;
+        }
     }
 
     public void AddExp(int exp)
@@ -66,9 +73,14 @@ public class PlayerAbility : MonoBehaviour
             playerEXP = 0;
             playerLevel += 1;
             OnLevelUp?.Invoke(playerLevel);
-            gameAbilityMgr.ChanceSelectAbility();
         }
 
         OnAddExp?.Invoke(this,new OnAddExpArgs(playerEXP,playerLevelMaxEXP));
     }
+
+    public Dictionary<AbilityType, AbilityData> GetHoldAbility()
+    {
+        return holdAbilitys;
+    }
+
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -46,8 +47,12 @@ public class GameAbilityManager : MonoBehaviour
     {
         return abilityDataBase.GetAbilityData(abilityId);
     }
-    // 게임 시작 시 무기 하나를 고르는 시스템이 필요하다.
-    // [테스트] 게임 시작 시 무기 하나를 랜덤으로 골라 반환한다.
+    
+    public AbilityData GetAbilityData(AbilityType abilityType,int level)
+    {
+        return abilityDataBase.GetAbilityData(abilityType,level);
+    }
+
     public AbilityData GetRandomWeapon()
     {
         var weaponList = abilityDataBase.GetAbilityDataByAbilityType(ACTIVE_TYPE);
@@ -77,16 +82,15 @@ public class GameAbilityManager : MonoBehaviour
         return abilityDataBase.GetAbilityDataByWeaponLevel(weaponType,level);
     }
 
-    public void ChanceSelectAbility()
+    public List<AbilityData> RandomAbilityList()
     {
         var db = abilityDataBase;
-        // 레벨업 하거나 보물상자를 획득했을 경우
-        // 랜덤하게 3개의 능력을 가져와서 UI에 출력하고, 1개를 고를 수 있도록 한다.
-        // 3개의 능력은 이 함수에서 뽑도록 하고, UI 로 해당 능력 데이터 리스트를 넘겨주도록 한다.
-        // [테스트] 능력치 3개를 랜덤하게 뽑아와서 1종을 랜덤하게 골라 적용한다.
-        var activeList = db.GetAbilityDataByAbilityType(ACTIVE_TYPE);
-        var passiveList = db.GetAbilityDataByAbilityType(PASSIVE_TYPE);
-        activeList.DistinctBy(i => i.abilityType).ToList();
-        passiveList.DistinctBy(i => i.abilityType).ToList();
+        var allAbility = db.GetAllAbilityData();
+        // 중복 종류 제거
+        var uniqueAbilitys = allAbility.DistinctBy(x => x.abilityType).ToList();
+        var rand = new System.Random();
+        var selected = uniqueAbilitys.OrderBy(x => rand.Next()).Take(3).ToList();
+
+        return selected;
     }
 }

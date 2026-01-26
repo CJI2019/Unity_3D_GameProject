@@ -10,6 +10,7 @@ public class PlayerInputManager : MonoBehaviour
     void Start()
     {
         playerInput = GetComponent<PlayerInput>();
+        SetCursorLockMode(true);
     }
     public void OnMove(InputValue value)
     {
@@ -23,5 +24,11 @@ public class PlayerInputManager : MonoBehaviour
     public Camera GetCamera()
     {
         return playerInput.camera;
+    }
+
+    public void SetCursorLockMode(bool isLock)
+    {
+        Cursor.lockState = isLock ? CursorLockMode.Locked : CursorLockMode.None; // 마우스 고정
+        Cursor.visible = !isLock;                   // 커서 숨기기
     }
 }
