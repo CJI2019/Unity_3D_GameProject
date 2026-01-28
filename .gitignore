@@ -1,6 +1,45 @@
-# Unity 관련
-*.meta
-*.asset
+# Unity 기본 폴더
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
+
+# 하위 폴더 무시 
+_Recovery/
+Imported Assets/
+UserSettings/
+
+# IDE 관련 파일
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
 
 # Visual Studio 관련 
 .vs/
+.vscode/
+
+# OS 관련
+.DS_Store
+Thumbs.db
+
+# 빌드 결과물
+*.apk
+*.aab
+*.exe
+*.dll
+*.app
+
+# Unity 패키지
+*.unitypackage
+
+# Crash 보고서
+sysinfo.txt
