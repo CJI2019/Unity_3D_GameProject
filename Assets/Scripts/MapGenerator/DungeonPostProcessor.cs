@@ -112,9 +112,6 @@ public class DungeonPostProcessor : MonoBehaviour
                     // 벽으로 막혀있음 -> 연결된 방이 아님 -> 스킵
                     continue;
                 }
-                //GameObject neighborObj = mapGrid[neighbor.x, neighbor.y, neighbor.z];
-                //TileConnectivity neighborConn = neighborObj.GetComponent<TileConnectivity>();
-                //neighborConn.CheckWall(dir);
 
                 // 모든 조건을 통과했으므로 같은 방으로 인정
                 visited[neighbor.x, neighbor.y, neighbor.z] = true;
@@ -146,12 +143,5 @@ public class DungeonPostProcessor : MonoBehaviour
     {
         // 기존 바닥 삭제
         Destroy(mapGrid[coord.x, coord.y, coord.z]);
-
-        // // 벽 생성
-        // GameObject newWall = Instantiate(wallPrefab, new Vector3(coord.x, coord.y, coord.z) * 2f, Quaternion.identity); // * 2f는 그리드 간격(gridOffset)
-        // newWall.transform.parent = this.transform; // 정리용 부모 설정
-        
-        // // 그리드 데이터 갱신
-        // mapGrid[coord.x, coord.y, coord.z] = newWall;
     }
 }

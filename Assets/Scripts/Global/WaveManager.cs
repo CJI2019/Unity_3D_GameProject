@@ -114,10 +114,8 @@ public class WaveManager : MonoBehaviour
                 }
             }
 
-            if (entry.spawnInterval > 0)
-                yield return new WaitForSeconds(entry.spawnInterval);
-            else if (i % 10 == 0)
-                yield return null; //프레임 분산
+            if (entry.spawnInterval > 0) yield return new WaitForSeconds(entry.spawnInterval);
+            else yield return null; //프레임 분산
         }
     }
 

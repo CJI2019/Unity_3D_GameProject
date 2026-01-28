@@ -71,8 +71,6 @@ public class GameAbilityManager : MonoBehaviour
         var selectPassiveIndex = UnityEngine.Random.Range(0,passiveUniqueList.Count);
 
         AbilityData selectPassive = passiveUniqueList[selectPassiveIndex];
-        Debug.Log(passiveUniqueList.Count + "개의 패시브가 존재");
-        Debug.Log(selectPassive.name + "을 골랐습니다.");
         abilityDataBase.GetAbilityDataByPassiveLevel(selectPassive.abilityType,level);
         return null;
     }

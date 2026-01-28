@@ -42,5 +42,5 @@ MonoBehaviour:
     count: 400
     spawnStartTime: 10
     pattern: 0
-    spawnInterval: 0
+    spawnInterval: 0.01
     circleRadius: 15

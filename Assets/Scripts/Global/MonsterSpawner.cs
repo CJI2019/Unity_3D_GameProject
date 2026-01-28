@@ -18,8 +18,9 @@ public class MonsterSpawner : MonoBehaviour
     [SerializeField] int monsterCountLimit = 500;
     [Tooltip("몬스터 제한수가 스폰되었을 때 활성화 몬스터와 총 몬스터의 로그를 출력")]
     [SerializeField] bool isDebugActiveLog = false;
+
     public event Action OnInit;
-    const string poolKey = "Monster_";
+
     static int rayCastingLayerMask = 0;
     float radius = 25f;
     int angleStep = 1;
@@ -27,6 +28,7 @@ public class MonsterSpawner : MonoBehaviour
     float lastSpawnTime = 0;
     int currentMonsterCount = 0;
     int activeMosnterListIndex = 0;
+
     Dictionary<int,NavMeshAgent> activeMonsterList = new Dictionary<int, NavMeshAgent>();
 
     void Awake()
@@ -37,7 +39,7 @@ public class MonsterSpawner : MonoBehaviour
 
     void Start()
     {
-        for(int i = 0 ;i < monsterList.Count;++i)
+        for(int i = 0 ; i < monsterList.Count;++i)
         {
             var monster = monsterList[i];
             var monsterPool = new GenericObjectPool<Monster>(monster.prefab, 1, transform);
@@ -79,26 +81,26 @@ public class MonsterSpawner : MonoBehaviour
 
             if (Physics.Raycast(rayOriginPos, Vector3.down, out hit, distance, rayCastingLayerMask, QueryTriggerInteraction.Ignore))
             {
-                Monster spawnMonster = PoolManager.Instance.Get<Monster>(poolKey + '0');
+                //Monster spawnMonster = PoolManager.Instance.Get<Monster>(poolKey + '0');
 
-                var ai = spawnMonster.GetComponent<MonsterAI>();
-                ai.InitAgent(hit.point + Vector3.up * 2.0f);
-                FindEmptyKey();
-                // 키를 검색했지만, 남아있는 자리가 없을 경우
-                // 몬스터가 사망해서 풀에 반환한 상태이다. 하지만 UpdateAgent 코루틴 함수에서 아직 이 키가 남아 있는 경우
-                // 키의 반환은 코루틴 함수가 호출되면 자동으로 반환됨
-                if (activeMonsterList.ContainsKey(activeMosnterListIndex))
-                {
-                    PoolManager.Instance.Return<Monster>(poolKey + '0', spawnMonster);
-                    continue;
-                }
+                //var ai = spawnMonster.GetComponent<MonsterAI>();
+                //ai.InitAgent(hit.point + Vector3.up * 2.0f);
+                //FindEmptyKey();
+                //// 키를 검색했지만, 남아있는 자리가 없을 경우
+                //// 몬스터가 사망해서 풀에 반환한 상태이다. 하지만 UpdateAgent 코루틴 함수에서 아직 이 키가 남아 있는 경우
+                //// 키의 반환은 코루틴 함수가 호출되면 자동으로 반환됨
+                //if (activeMonsterList.ContainsKey(activeMosnterListIndex))
+                //{
+                //    PoolManager.Instance.Return<Monster>(poolKey + '0', spawnMonster);
+                //    continue;
+                //}
 
-                activeMonsterList[activeMosnterListIndex] = spawnMonster.GetComponent<NavMeshAgent>();
-                spawnMonster.OnMonsterDead += OnMonsterDead;
-                ++currentMonsterCount;
-                lastSpawnTime = Time.time + spawnCooldown;
+                //activeMonsterList[activeMosnterListIndex] = spawnMonster.GetComponent<NavMeshAgent>();
+                //spawnMonster.OnMonsterDead += OnMonsterDead;
+                //++currentMonsterCount;
+                //lastSpawnTime = Time.time + spawnCooldown;
 
-                Debug.DrawRay(rayOriginPos, direction * hit.distance, Color.green, spawnCooldown);
+                //Debug.DrawRay(rayOriginPos, direction * hit.distance, Color.green, spawnCooldown);
             }
             else
             {

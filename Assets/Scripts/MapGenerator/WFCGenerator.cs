@@ -11,12 +11,12 @@ public class WFCGenerator : MonoBehaviour
     public float gridOffset = 2f; // 타일 간격
     public bool OnNavMeshBuild = false;
     public List<WFCTile> allTiles; // 인스펙터에서 등록할 타일 목록
+
     DungeonPostProcessor postProcessor;
     DungeonBaker dungeonBaker;
     GameObject[,,] spawnedObjects; // 생성된 오브젝트 추적용 배열
-    // 각 그리드 셀의 상태 (가능한 타일들의 목록)
     List<WFCTile>[,,] grid;
-    bool isCollapsed = false;
+
     Vector3Int[] directions = {
         Vector3Int.up, Vector3Int.down, 
         Vector3Int.left, Vector3Int.right, 
@@ -32,7 +32,6 @@ public class WFCGenerator : MonoBehaviour
         StartCoroutine(Generate());
     }
 
-    // 1. 초기화: 모든 셀에 '모든 타일이 올 수 있다'고 설정
     void InitializeGrid()
     {
         grid = new List<WFCTile>[mapSize.x, mapSize.y, mapSize.z];
@@ -43,12 +42,17 @@ public class WFCGenerator : MonoBehaviour
             {
                 for (int z = 0; z < mapSize.z; z++)
                 {
-                    grid[x, y, z] = new List<WFCTile>(allTiles);
+                    InitCoords(new Vector3Int(x, y, z));
                 }
             }
         }
 
         spawnedObjects = new GameObject[mapSize.x, mapSize.y, mapSize.z];
+
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
     }
 
     void InitCoords(Vector3Int coords)
@@ -59,31 +63,44 @@ public class WFCGenerator : MonoBehaviour
     // 2. 생성 루프
     IEnumerator Generate()
     {
-        int totalCells = mapSize.x * mapSize.y * mapSize.z;
-        int collapsedCount = 0;
-
-        // 첫 엔트로피 셀 임의 지정. 0,0,0 의 셀을 선택한다.
-        grid[0,0,0].RemoveAll(tile => tile.tileName == "Wall");   
-
-        while (collapsedCount < totalCells)
+        int retry = 0, maxRetry = 100;
+        while (retry < maxRetry)
         {
-            // A. 엔트로피가 가장 낮은(확정하기 좋은) 셀 찾기
-            Vector3Int currentCoords = GetLowestEntropyCell();
-            // 만약 찾지 못했거나 이미 다 찼으면 종료
-            if (currentCoords == new Vector3Int(-1, -1, -1)) break;
-            CoordsExcutate(currentCoords);
-            collapsedCount++;
-            DrawMap(); // 맵 그리기
-            yield return new WaitForSeconds(0.005f); // 과정을 눈으로 보기 위해 딜레이
+            int totalCells = mapSize.x * mapSize.y * mapSize.z;
+            int collapsedCount = 0;
+
+            // 첫 엔트로피 셀 임의 지정. 0,0,0 의 셀을 선택한다.
+            grid[0,0,0].RemoveAll(tile => tile.tileName == "Wall");   
+
+            while (collapsedCount < totalCells)
+            {
+                // 엔트로피가 가장 낮은(확정하기 좋은) 셀 찾기
+                Vector3Int currentCoords = GetLowestEntropyCell();
+                // 만약 찾지 못했거나 이미 다 찼으면 종료
+                if (currentCoords == new Vector3Int(-1, -1, -1)) break;
+                // 관측(Collapse): 가능한 타일 중 하나를 랜덤으로 선택하여 확정
+                CollapseCell(currentCoords);
+                // 전파(Propagate): 확정된 셀 때문에 주변 셀들의 가능성 제거
+                Propagate(currentCoords);
+
+                collapsedCount++;
+                //DrawMap(); // 맵 그리기
+                //yield return new WaitForSeconds(0.005f); // 과정을 눈으로 보기 위해 딜레이
+            }
+            if (CheckIsolatedIsland())
+            {
+                Debug.Log("맵 생성 실패: 고립된 섬이 존재합니다. 다시 시도합니다.");
+                InitializeGrid();
+                ++retry;
+            }
+            else
+            {
+                break;
+            }
         }
 
         DrawMap(); // 최종 맵 생성
 
-        // 맵 생성이 끝났으니 후처리 실행
-        if (postProcessor != null)
-        {
-            postProcessor.ProcessMap(spawnedObjects, mapSize);
-        }
 
         if (OnNavMeshBuild)
         {
@@ -91,15 +108,6 @@ public class WFCGenerator : MonoBehaviour
             dungeonBaker.BakeMapAsync();
         }
 
-    }
-
-    void CoordsExcutate(Vector3Int currentCoords)
-    {
-        // B. 관측(Collapse): 가능한 타일 중 하나를 랜덤으로 선택하여 확정
-        CollapseCell(currentCoords);
-        
-        // C. 전파(Propagate): 확정된 셀 때문에 주변 셀들의 가능성 제거
-        Propagate(currentCoords);
     }
 
     // 엔트로피가 가장 낮은 셀 좌표 반환 (확정되지 않은 셀 중)
@@ -154,22 +162,20 @@ public class WFCGenerator : MonoBehaviour
             possibleTiles.Remove(item);
         }
 
-        if(possibleTiles.Count == 0)
+        if (possibleTiles.Count == 0)
         {
-            // Debug.Log("에러 : 타일 후보가 없습니다.");
             InitCoords(coords);
             CollapseCell(coords);
             return;
         }
 
-        // 가중치 기반 랜덤 선택 (간단하게는 그냥 Random)
+        // 랜덤 선택
         WFCTile selectedTile = possibleTiles[Random.Range(0, possibleTiles.Count)];
-        // 해당 셀의 리스트를 선택된 타일 하나로 줄임
-        possibleTiles.Clear();
-        possibleTiles.Add(selectedTile);
         
-        // Debug.Log(coords + " 확정 : " + selectedTile.tileName);
+        possibleTiles.Clear(); 
+        possibleTiles.Add(selectedTile); // 해당 셀의 리스트를 선택된 타일 하나로 줄임
     }
+
     void FindExistTile(List<WFCTile> tileList, string tileName)
     {
         if(tileList.Find(tile => tile.tileName == tileName) != null)
@@ -185,13 +191,11 @@ public class WFCGenerator : MonoBehaviour
     void Propagate(Vector3Int startCoords)
     {
         // 간단한 전파 구현: 현재 셀의 상하좌우앞뒤 이웃만 검사
-        // *정석 WFC는 큐(Queue)를 써서 연쇄 반응을 처리해야 하지만, 여기선 핵심 이해를 위해 인접 6방향만 처리합니다.
 
         foreach (var dir in directions)
         {
             Vector3Int neighborCoord = startCoords + dir;
 
-            // 맵 범위 체크
             if (IsValidCoord(neighborCoord))
             {
                 UpdateNeighbor(startCoords, neighborCoord, dir);
@@ -217,14 +221,11 @@ public class WFCGenerator : MonoBehaviour
             // 소스(방금 확정된 곳)의 가능한 타일 중 하나라도 연결 가능하면 생존
             foreach (var sTile in sourceTiles)
             {
-                // Debug.Log("타겟 : " + tTile.tileName + " - 소스 : " + sTile.tileName + " 소스 방향 : " + direction);
                 if (CheckSocketCompatibility(sTile, tTile, direction))
                 {
-                    // Debug.Log("타겟 생존");
                     isCompatible = true;
                     break;
                 }
-                // Debug.Log("타겟 탈락");
             }
 
             if (!isCompatible) 
@@ -263,6 +264,19 @@ public class WFCGenerator : MonoBehaviour
         return false;
     }
 
+    Vector3Int GetOppositeDirection(Vector3Int dir)
+    {
+        if (dir == Vector3Int.up) return Vector3Int.down;
+        if (dir == Vector3Int.down) return Vector3Int.up;
+        if (dir == Vector3Int.left) return Vector3Int.right;
+        if (dir == Vector3Int.right) return Vector3Int.left;
+        if (dir == Vector3Int.forward) return Vector3Int.back;
+        if (dir == Vector3Int.back) return Vector3Int.forward;
+
+        Debug.Log("Error: Invalid direction");
+        return dir;
+    }
+
     bool IsValidCoord(Vector3Int c)
     {
         return c.x >= 0 && c.x < mapSize.x &&
@@ -290,5 +304,107 @@ public class WFCGenerator : MonoBehaviour
                 }
             }
         }
+    }
+
+    bool CheckIsolatedIsland()
+    {
+        bool[,,] visited = new bool[mapSize.x,mapSize.y,mapSize.z];
+        int islandCount = 0;
+
+        for (int x = 0; x < mapSize.x; x++)
+        {
+            for (int y = 0; y < mapSize.y; y++)
+            {
+                for (int z = 0; z < mapSize.z; z++)
+                {
+                    var tiles = grid[x, y, z];
+
+                    if (!visited[x,y,z] && IsFloor(new Vector3Int(x,y,z)))
+                    {
+                        ++islandCount;
+
+                        if (islandCount >= 2)
+                        {
+                            return true;
+                        }
+
+                        BFSTileSearch(visited, x, y, z);
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    void BFSTileSearch(bool[,,] visited, int x, int y, int z)
+    {
+        visited[x, y, z] = true;
+
+        Queue<Vector3Int> queue = new Queue<Vector3Int>();
+        queue.Enqueue(new Vector3Int(x, y, z));
+
+        while (queue.Count > 0)
+        {
+            Vector3Int current = queue.Dequeue();
+            var currentTiles = grid[current.x, current.y, current.z];
+            foreach (var dir in directions)
+            {
+                Vector3Int neighborCoord = current + dir;
+
+                if (!IsValidCoord(neighborCoord)) continue;
+                if(!IsFloor(neighborCoord)) continue;
+
+                var neighborTiles = grid[neighborCoord.x, neighborCoord.y, neighborCoord.z];
+                if (visited[neighborCoord.x, neighborCoord.y, neighborCoord.z]) continue;
+
+                //현재 타일에서 이웃 타일로 이동 가능한지 확인
+                if (CheckRoad(currentTiles[0],dir) && CheckRoad(neighborTiles[0], GetOppositeDirection(dir)))
+                {
+                    visited[neighborCoord.x, neighborCoord.y, neighborCoord.z] = true;
+                    queue.Enqueue(neighborCoord);
+                }
+            }
+        }
+    }
+
+    bool IsFloor(Vector3Int coord)
+    {
+        var tiles = grid[coord.x, coord.y, coord.z];
+        if (tiles.Count == 0) return false;
+        return tiles[0].prefab.CompareTag("Floor");
+    }
+
+    bool PrintTileNameAndRoad(bool[,,] visited)
+    {
+        string temp = "";
+        string strVisited = "";
+        for (int x = 0; x < mapSize.x; x++)
+        {
+            for (int y = 0; y < mapSize.y; y++)
+            {
+                for (int z = 0; z < mapSize.z; z++)
+                {
+                    var tiles = grid[x, y, z];
+                    temp += tiles[0].prefab.name + "\t";
+
+                    if (!visited[x, y, z] && IsFloor(new Vector3Int(x, y, z)))
+                    {
+                        strVisited += "1";
+                    }
+                    else
+                    {
+                        strVisited += "0";
+                    }
+                }
+            }
+            temp += "\n";
+            strVisited += "\n";
+
+        }
+        Debug.Log(temp);
+        Debug.Log("\n");
+        Debug.Log(strVisited);
+        return false;
     }
 }
