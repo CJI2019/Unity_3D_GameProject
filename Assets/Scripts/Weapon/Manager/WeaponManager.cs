@@ -1,0 +1,79 @@
+using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEngine;
+
+public abstract class WeaponManager : MonoBehaviour
+{
+    protected List<IWeapon> activeWeapons;
+    string poolKey;
+    protected AbilityData weaponData;
+    //추상 메서드
+    public abstract void UpdateWeapons();
+    protected abstract void AddWeaponBySubClass(int count);
+    //
+    void Awake()
+    {
+        activeWeapons = new List<IWeapon>();
+    }
+    // 활성화된 무기를 활성화 그룹에 추가한다.
+    void ActiveWeapon(IWeapon iWeapon)
+    {
+        activeWeapons.Add(iWeapon);
+    }
+    public void SetWeaponData(AbilityData abilityData)
+    {
+        weaponData = abilityData;
+
+        var addWeaponCount = weaponData.weaponCount - activeWeapons.Count;
+        if(addWeaponCount > 0)
+        {
+            AddWeaponBySubClass(addWeaponCount);
+        }
+
+        foreach(var weapon in activeWeapons)
+        {
+            weapon.SetDamage(abilityData.damage);
+        }
+    }
+   
+    protected void SetPoolKey(string poolKey)
+    {
+        this.poolKey = poolKey;
+    }
+    protected void RegisterWeapon<T>(T prefab,string poolKey) where T : Component, IPoolable, IWeapon
+    {
+        var weaponPool = new GenericObjectPool<T>(prefab, 20, transform);
+        PoolManager.Instance.RegisterPool(poolKey, weaponPool);
+    }
+    protected void AddWeapon<T>(int count) where T : Component, IPoolable, IWeapon
+    {
+        int beforeCount = activeWeapons.Count;
+        // 기존 무기 반환
+        DeActiveWeapon<T>();
+
+        // 무기 꺼내기
+        for (int i = 0; i < beforeCount + count; ++i)
+        {
+            T weapon = PoolManager.Instance.Get<T>(poolKey);
+            ActiveWeapon(weapon);
+            weapon.transform.SetParent(transform);
+        }
+
+        UpdateWeapons();
+    }
+    
+    // 무기 종류를 활성 그룹에서 제거한다.
+    protected void DeActiveWeapon<T>() where T : Component, IPoolable, IWeapon
+    {
+        foreach (IWeapon activeWeapon in activeWeapons)
+        {
+            var weapon = activeWeapon as T;
+            if (weapon)
+            {
+                PoolManager.Instance.Return(poolKey, weapon);
+            }
+        }
+
+        activeWeapons.Clear();
+    }
+}
