@@ -21,4 +21,15 @@ public class TileConnectivity : MonoBehaviour
         if (direction == Vector3Int.back) return back;
         return false;
     }
+
+    public bool CheckWall(Vector3Int direction)
+    {
+        if (direction == Vector3Int.up) return down;
+        if (direction == Vector3Int.down) return up;
+        if (direction == Vector3Int.left) return right;
+        if (direction == Vector3Int.right) return left;
+        if (direction == Vector3Int.forward) return back;
+        if (direction == Vector3Int.back) return forward;
+        return false;
+    }
 }

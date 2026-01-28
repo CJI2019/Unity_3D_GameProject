@@ -24,7 +24,7 @@ public class DungeonBaker : MonoBehaviour
 
         NavMeshBuildSettings settings = surface.GetBuildSettings();
         
-        List<NavMeshBuildSource> sources = new List<NavMeshBuildSource>();
+        List<NavMeshBuildSource> sources = new();
         Bounds bounds = surface.GetComponent<Collider>().bounds; // 맵 전체 영역
 
         // NavMesh를 빌드할 때 필요한 소스 데이터를 수집하는 함수

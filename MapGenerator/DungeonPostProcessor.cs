@@ -92,7 +92,7 @@ public class DungeonPostProcessor : MonoBehaviour
         {
             Vector3Int current = queue.Dequeue();
             
-            // ★ 1. 현재 타일의 연결 정보를 가져옵니다.
+            // 현재 타일의 연결 정보를 가져옴
             GameObject currentObj = mapGrid[current.x, current.y, current.z];
             TileConnectivity currentConn = currentObj.GetComponent<TileConnectivity>();
 
@@ -100,16 +100,11 @@ public class DungeonPostProcessor : MonoBehaviour
             {
                 Vector3Int neighbor = current + dir;
 
-                // 맵 범위 확인
                 if (!IsValid(neighbor)) continue;
-
-                // 방문 여부 확인
                 if (visited[neighbor.x, neighbor.y, neighbor.z]) continue;
-
-                // 바닥(Floor) 태그인지 확인
                 if (!IsFloor(neighbor)) continue;
 
-                // ★ 2. 여기서 '고립' 여부를 판별합니다!
+                // '고립' 여부 판별
                 // "현재 타일에서 해당 방향(dir)으로 나갈 수 있는가?"를 체크합니다.
                 // WFC 규칙상 내 쪽이 뚫려있으면, 상대방 쪽도 무조건 뚫려있으므로(P-P 연결), 내 쪽만 검사하면 됩니다.
                 if (currentConn != null && currentConn.CanCross(dir) == false)
@@ -117,6 +112,9 @@ public class DungeonPostProcessor : MonoBehaviour
                     // 벽으로 막혀있음 -> 연결된 방이 아님 -> 스킵
                     continue;
                 }
+                //GameObject neighborObj = mapGrid[neighbor.x, neighbor.y, neighbor.z];
+                //TileConnectivity neighborConn = neighborObj.GetComponent<TileConnectivity>();
+                //neighborConn.CheckWall(dir);
 
                 // 모든 조건을 통과했으므로 같은 방으로 인정
                 visited[neighbor.x, neighbor.y, neighbor.z] = true;
@@ -126,17 +124,15 @@ public class DungeonPostProcessor : MonoBehaviour
         }
         return tiles;
     }
+
     // 해당 좌표가 바닥인지 확인 (태그로 구분하거나 이름으로 구분)
     bool IsFloor(Vector3Int coord)
     {
         GameObject obj = mapGrid[coord.x, coord.y, coord.z];
         if (obj == null) return false;
         
-        // 방법 1: Tag 비교 (Inspector에서 프리팹 Tag 설정 필수)
+        // Tag 비교
         return obj.CompareTag(floorTag);
-        
-        // 방법 2: 이름에 "Floor"가 포함되는지 비교 (Tag 쓰기 싫을 때)
-        // return obj.name.Contains("Floor"); 
     }
 
     bool IsValid(Vector3Int c)
