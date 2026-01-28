@@ -1,7 +1,10 @@
-using UnityEngine;
-using UnityEditor;
-using System.IO;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using UnityEditor;
+using UnityEngine;
 
 public class CsvImporter : EditorWindow
 {
@@ -10,44 +13,16 @@ public class CsvImporter : EditorWindow
     // 저장될 SO 경로
     static string soSavePath = "Assets/Scripts/GameData/AbilityDatabase.asset";
 
-    [MenuItem("Tools/Import CSV to SO")]
-    public static void ImportCsvData()
+    [MenuItem("Tools/Import CSV -> AbilityDataBaseSO ")]
+    public static void ImportCsvAbilityData()
     {
-        if (!File.Exists(csvFilePath))
+        List<AbilityData> dataList = MapCsvToObjects<AbilityData>(csvFilePath);
+
+        if(dataList.Count == 0)
         {
-            Debug.LogError($"파일을 찾을 수 없습니다: {csvFilePath}");
+            Debug.LogError("CSV 데이터가 없거나 잘못되었습니다.");
             return;
-        }
-
-        string[] lines = File.ReadAllLines(csvFilePath);
-        if (lines.Length <= 1) return; // 헤더만 있거나 빈 파일
-
-        Debug.Log($"lines의 길이 {lines.Length}"); 
-        List<AbilityData> dataList = new List<AbilityData>();
-
-        var header = lines[0].Split(','); // Key 값만 저장되어 있는 데이터
-
-        // 키값이 몇 번째 열의 순서인지를 저장.
-        Dictionary<int, string> indexKeyTable = new Dictionary<int, string>();
-        for(int i = 0; i < header.Length;++i)
-        {
-            indexKeyTable[i] = header[i].Trim();
-        }
-
-        for(int i = 1; i < lines.Length;++i)
-        {
-            var stringAbilityDataTable = lines[i].Split(',');
-            AbilityData data = new AbilityData();
-
-            foreach(var keyValuePair in indexKeyTable)
-            {
-                var idx = keyValuePair.Key;
-                var key = keyValuePair.Value;
-                data.DataParse(key,stringAbilityDataTable[idx].Trim());
-            }
-
-            dataList.Add(data);
-        }
+        } 
 
         // ScriptableObject에 저장
         AbilityDataBaseSO database = AssetDatabase.LoadAssetAtPath<AbilityDataBaseSO>(soSavePath);
@@ -68,6 +43,54 @@ public class CsvImporter : EditorWindow
         AssetDatabase.Refresh();
 
         Debug.Log("CSV -> SO 변환 완료!");
-        
+    }
+
+    public static List<T> MapCsvToObjects<T>(string filePath) where T : new()
+    {
+        if (!File.Exists(filePath))
+        {
+            Debug.LogError($"파일을 찾을 수 없습니다: {filePath}");
+            return new List<T>();
+        }
+
+        string[] lines = File.ReadAllLines(filePath);
+        if (lines.Length <= 1) return new List<T>(); // 키만 있거나 빈 파일
+
+        var keyList = lines[0].Split(',').Select(h => h.Trim()).ToList();
+        var results = new List<T>();
+
+        // 필드 정보 가져오기
+        FieldInfo[] fieldInfos = typeof(T).GetFields();
+
+        for (int i = 1; i < lines.Length; ++i)
+        {
+            var values = lines[i].Split(',');
+            T obj = new T();
+            
+            for (int j = 0; j < keyList.Count; ++j)
+            {
+                // 공백 데이터 건너뛰기
+                if (string.IsNullOrWhiteSpace(values[j])) continue;
+
+                // 키와 이름과 일치하는 필드 찾기
+                var field = fieldInfos.FirstOrDefault(
+                    p => p.Name.Equals(keyList[j])
+                );
+
+                if (field != null && j < values.Length)
+                {
+                    // 문자열 데이터를 필드의 실제 타입(int, string 등)으로 변환하여 할당
+                    object value = Convert.ChangeType(values[j].Trim(), field.FieldType);
+                    field.SetValue(obj, value);
+                }
+                else
+                {
+                    Debug.LogWarning($"필드를 찾을 수 없습니다: {keyList[j]}");
+                }
+            }
+            results.Add(obj);
+        }
+
+        return results;
     }
 }

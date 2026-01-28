@@ -1,3 +1,6 @@
 # Unity 관련
 *.meta
 *.asset
+
+# Visual Studio 관련 
+.vs/

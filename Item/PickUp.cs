@@ -8,13 +8,5 @@ public abstract class PickUp : MonoBehaviour , IPoolable
     public void OnDespawn() {}
     public void OnSpawn() {}   
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag(PLAYER_STRING))
-        {
-            PickUpLogic(other);
-        }
-    }
-
     public abstract void PickUpLogic(Collider player);
 }

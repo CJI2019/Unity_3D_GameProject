@@ -68,9 +68,9 @@ public class WaveManager : MonoBehaviour
         }
 
         float angleStep = 360f / entry.count;
-        int remainCount = 0;
+        int retryCount = 0;
 
-        for (int i = 0; i < entry.count + remainCount; i++)
+        for (int i = 0; i < entry.count; i++)
         {
             Vector3 spawnPos = Vector3.zero;
             // 플레이어 좌표 갱신
@@ -102,8 +102,16 @@ public class WaveManager : MonoBehaviour
             }
             else
             {
-                ++remainCount;
-                continue;
+                if (retryCount == 10)
+                {
+                    retryCount = 0;
+                }
+                else
+                {
+                    --i;
+                    ++retryCount;
+                    continue;
+                }
             }
 
             if (entry.spawnInterval > 0)

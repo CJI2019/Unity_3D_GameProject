@@ -1,4 +1,4 @@
-﻿id,name,level,type,abilityType,weaponType,weaponCount,damage,passiveType
+﻿id,name,level,type,strAbilityType,weaponType,weaponCount,damage,passiveType
 ORBIT_1,회전 무기,1,ACTIVE,ORBIT,ORBIT,1,1,
 ORBIT_2,회전 무기,2,ACTIVE,ORBIT,ORBIT,2,2,
 ORBIT_3,회전 무기,3,ACTIVE,ORBIT,ORBIT,3,3,

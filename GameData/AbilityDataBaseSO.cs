@@ -6,53 +6,13 @@ public class AbilityData {
     public string id = "";
     public string name = "";
     public string type = "";
-    public string strWeaponType = "";
+    public string weaponType = "";
     public int level = 0;
     public int weaponCount = 0;
     public int damage = 0;
-    public string strPassiveType = "";
+    public string passiveType = "";
     public string strAbilityType = "";
-    // public WeaponType weaponType => ParseWeaponType(strWeaponType);
-    // public PassiveType passiveType => ParsePassiveType(strPassiveType);
     public AbilityType abilityType => ParseAbilityType(strAbilityType);
-    public void DataParse(string key,string value)
-    {
-        if(string.IsNullOrWhiteSpace(value)) return;
-
-        switch (key)
-        {
-            case "id":
-                id = value;
-            break;
-            case "name":
-                name = value;
-            break;
-            case "type":
-                type = value;
-            break;
-            case "weaponType":
-                strWeaponType = value;
-            break;
-            case "level":
-                level = int.Parse(value);
-            break;
-            case "weaponCount":
-                weaponCount = int.Parse(value);
-            break;
-            case "damage":
-                damage = int.Parse(value);
-            break;
-            case "passiveType":
-                strPassiveType = value;
-            break;
-            case "abilityType":
-                strAbilityType = value;
-            break;
-            default:
-                Debug.Log("알수없는 Key가 존재합니다. CSV 파일을 확인해주세요.");
-            break;
-        }
-    }
     
     public AbilityType ParseAbilityType(string strAbilityType)
     {
@@ -68,30 +28,6 @@ public class AbilityData {
 
         return 0;
     }
-
-    // public WeaponType ParseWeaponType(string strWeaponType)
-    // {
-    //     switch (strWeaponType)
-    //     {
-    //         case "PROJECTILE":
-    //             return WeaponType.BULLET;
-    //         case "ORBIT":
-    //             return WeaponType.ORBIT;
-    //     }
-
-    //     return 0;
-    // }
-
-    // public PassiveType ParsePassiveType(string strPassiveType)
-    // {
-    //     switch (strPassiveType)
-    //     {
-    //         case "ITEMRANGE":
-    //             return PassiveType.ITEMRANGE;
-    //     }
-
-    //     return 0;
-    // }
 }
 
 
@@ -100,16 +36,6 @@ public enum AbilityType
     BULLET,ORBIT,ITEMRANGE
 }
 
-// public enum WeaponType 
-// { 
-//     BULLET,ORBIT
-// }
-
-// public enum PassiveType 
-// { 
-//     ITEMRANGE
-// }
-
 [System.Serializable]
 [CreateAssetMenu(fileName = "AbilityDataBaseSO", menuName = "Scriptable Objects/AbilityDataBaseSO")]
 public class AbilityDataBaseSO : ScriptableObject
@@ -117,15 +43,15 @@ public class AbilityDataBaseSO : ScriptableObject
 
     public List<AbilityData> allAbility;
 
-    Dictionary<string, AbilityData> idAccessTable = new Dictionary<string, AbilityData>();
+    Dictionary<string, AbilityData> idAccessTable = new();
     // 능력 종류로 접근하는 데이터(무기 또는 패시브)
-    Dictionary<string, List<AbilityData>> typeAccessTable = new Dictionary<string, List<AbilityData>>();
+    Dictionary<string, List<AbilityData>> typeAccessTable = new();
     // [공통 종류][레벨] 로 접근하는 데이터
-    Dictionary<AbilityType, Dictionary<int, AbilityData>> abilityTypeLevelAccessTable = new Dictionary<AbilityType, Dictionary<int, AbilityData>>();
+    Dictionary<AbilityType, Dictionary<int, AbilityData>> abilityTypeLevelAccessTable = new();
     // [무기 종류][레벨]로 접근하는 데이터
-    Dictionary<AbilityType, Dictionary<int, AbilityData>> weaponTypeLevelAccessTable = new Dictionary<AbilityType, Dictionary<int, AbilityData>>();
+    Dictionary<AbilityType, Dictionary<int, AbilityData>> weaponTypeLevelAccessTable = new();
     // [패시브 종류][레벨]로 접근하는 데이터
-    Dictionary<AbilityType, Dictionary<int, AbilityData>> passiveTypeLevelAccessTable = new Dictionary<AbilityType, Dictionary<int, AbilityData>>();
+    Dictionary<AbilityType, Dictionary<int, AbilityData>> passiveTypeLevelAccessTable = new();
 
     public void Init()
     {
