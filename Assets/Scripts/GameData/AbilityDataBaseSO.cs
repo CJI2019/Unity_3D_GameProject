@@ -3,14 +3,14 @@ using UnityEngine;
 
 [System.Serializable]
 public class AbilityData {
-    public string id = "";
-    public string name = "";
-    public string type = "";
-    public string weaponType = "";
-    public int level = 0;
-    public int weaponCount = 0;
-    public int damage = 0;
-    public string passiveType = "";
+    public string id             = "";
+    public string name           = "";
+    public string type           = "";
+    public string weaponType     = "";
+    public int level             = 0;
+    public int weaponCount       = 0;
+    public int damage            = 0;
+    public string passiveType    = "";
     public string strAbilityType = "";
     public AbilityType abilityType => ParseAbilityType(strAbilityType);
     
@@ -43,13 +43,13 @@ public class AbilityDataBaseSO : ScriptableObject
 
     public List<AbilityData> allAbility;
 
-    Dictionary<string, AbilityData> idAccessTable = new();
+    Dictionary<string, AbilityData> idAccessTable                                     = new();
     // 능력 종류로 접근하는 데이터(무기 또는 패시브)
-    Dictionary<string, List<AbilityData>> typeAccessTable = new();
+    Dictionary<string, List<AbilityData>> typeAccessTable                             = new();
     // [공통 종류][레벨] 로 접근하는 데이터
     Dictionary<AbilityType, Dictionary<int, AbilityData>> abilityTypeLevelAccessTable = new();
     // [무기 종류][레벨]로 접근하는 데이터
-    Dictionary<AbilityType, Dictionary<int, AbilityData>> weaponTypeLevelAccessTable = new();
+    Dictionary<AbilityType, Dictionary<int, AbilityData>> weaponTypeLevelAccessTable  = new();
     // [패시브 종류][레벨]로 접근하는 데이터
     Dictionary<AbilityType, Dictionary<int, AbilityData>> passiveTypeLevelAccessTable = new();
 

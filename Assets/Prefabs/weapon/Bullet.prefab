@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2186762046547873349}
   - component: {fileID: 8476838420651516968}
   - component: {fileID: 8670532629695412949}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 5817287385516612911}
   - component: {fileID: 5363446834176077467}
   - component: {fileID: 2943087087401287549}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -135,8 +135,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07dafae1e0efe7642a04190b96bb0d22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BulletWeapon
-  damage: 10
   attackRate: 2
+  _damage: 10
   attackRange: 100
   bulletModel: {fileID: 7702563122102572367}
   speed: 50
@@ -172,7 +172,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1667123919746820497}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}

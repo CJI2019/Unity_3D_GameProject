@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.AI.Navigation; // AI Navigation 패키지 네임스페이스
+using Unity.AI.Navigation; 
 using UnityEngine;
-using UnityEngine.AI; // NavMeshBuilder용
+using UnityEngine.AI; 
 
 public class DungeonBaker : MonoBehaviour
 {
@@ -19,9 +19,8 @@ public class DungeonBaker : MonoBehaviour
     {
         surface.RemoveData();
 
-        var navMeshData = new NavMeshData();
-        surface.navMeshData = navMeshData;
-
+        var navMeshData               = new NavMeshData();
+        surface.navMeshData           = navMeshData;
         NavMeshBuildSettings settings = surface.GetBuildSettings();
         
         List<NavMeshBuildSource> sources = new();
@@ -39,7 +38,6 @@ public class DungeonBaker : MonoBehaviour
         );
 
         // 비동기 연산 시작
-        // bounds를 설정할 때, surface가 감싸는 영역(Bounds)을 정확히 넣어야 합니다.
         var operation = NavMeshBuilder.UpdateNavMeshDataAsync(
             navMeshData,
             settings,
@@ -47,11 +45,22 @@ public class DungeonBaker : MonoBehaviour
             bounds
         );
 
-        // 완료 대기 (로딩처리시 이부분에서 하면 될듯?)
+        // 완료 대기
         while (!operation.isDone)
         {
             Debug.Log($"베이킹 진행률: {operation.progress * 100:F1}%");
             yield return null;
+        }
+
+        // 씬에 있는 모든 NavMeshLink를 찾아서 껐다 킵니다.
+        var links = FindObjectsByType<NavMeshLink>(FindObjectsSortMode.None);
+        foreach (var link in links)
+        {
+            if (link.gameObject.activeInHierarchy)
+            {
+                link.enabled = false;
+                link.enabled = true;
+            }
         }
 
         // 완료 후 적용

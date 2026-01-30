@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,8 +11,7 @@ public class CsvImporter : EditorWindow
 {
     // CSV 파일 경로 (Assets 폴더 기준)
     static string csvFilePath = "Assets/Scripts/GameData/AbilityData.csv";
-    // 저장될 SO 경로
-    static string soSavePath = "Assets/Scripts/GameData/AbilityDatabase.asset";
+    static string soSavePath  = "Assets/Scripts/GameData/AbilityDatabase.asset";
 
     [MenuItem("Tools/Import CSV -> AbilityDataBaseSO ")]
     public static void ImportCsvAbilityData()
@@ -56,11 +56,17 @@ public class CsvImporter : EditorWindow
         string[] lines = File.ReadAllLines(filePath);
         if (lines.Length <= 1) return new List<T>(); // 키만 있거나 빈 파일
 
-        var keyList = lines[0].Split(',').Select(h => h.Trim()).ToList();
+        // 정규표현식: 따옴표 안의 쉼표는 무시하고 분리
+        string csvSplitPattern = @",(?=(?:[^""]*""[^""]*"")*(?![^""]*""))";
+
+        // 헤더 파싱
+        var keyList = Regex.Split(lines[0], csvSplitPattern)
+                           .Select(h => h.Trim())
+                           .ToList();
         var results = new List<T>();
 
         // 필드 정보 가져오기
-        FieldInfo[] fieldInfos = typeof(T).GetFields();
+        Type type = typeof(T);
 
         for (int i = 1; i < lines.Length; ++i)
         {
@@ -72,20 +78,24 @@ public class CsvImporter : EditorWindow
                 // 공백 데이터 건너뛰기
                 if (string.IsNullOrWhiteSpace(values[j])) continue;
 
-                // 키와 이름과 일치하는 필드 찾기
-                var field = fieldInfos.FirstOrDefault(
-                    p => p.Name.Equals(keyList[j])
-                );
+                // 문자열 정제: 양끝 따옴표 제거 및 "" -> " 변환
+                string finalValue = values[j].Trim('"').Replace("\"\"", "\"");
 
-                if (field != null && j < values.Length)
+                // 리플렉션으로 필드 찾기
+                var field = type.GetField(keyList[j]);
+
+                if (field != null)
                 {
-                    // 문자열 데이터를 필드의 실제 타입(int, string 등)으로 변환하여 할당
-                    object value = Convert.ChangeType(values[j].Trim(), field.FieldType);
-                    field.SetValue(obj, value);
-                }
-                else
-                {
-                    Debug.LogWarning($"필드를 찾을 수 없습니다: {keyList[j]}");
+                    try
+                    {
+                        // 타입 동적 변환 및 할당
+                        object value = Convert.ChangeType(finalValue, field.FieldType);
+                        field.SetValue(obj, value);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogError($"[CSV 파싱 에러] Line {i + 1}, Field '{keyList[j]}': {e.Message}");
+                    }
                 }
             }
             results.Add(obj);

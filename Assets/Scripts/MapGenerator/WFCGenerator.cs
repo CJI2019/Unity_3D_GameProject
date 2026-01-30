@@ -7,15 +7,14 @@ using UnityEngine.Rendering;
 public class WFCGenerator : MonoBehaviour
 {
     [Header("Settings")]
-    public Vector3Int mapSize = new Vector3Int(5, 5, 5);
-    public float gridOffset = 2f; // 타일 간격
-    public bool OnNavMeshBuild = false;
-    public List<WFCTile> allTiles; // 인스펙터에서 등록할 타일 목록
+    [SerializeField] Vector3Int mapSize  = new Vector3Int(5, 5, 5);
+    [SerializeField] float gridOffset    = 2f; // 타일 간격
+    [SerializeField] bool OnNavMeshBuild = false;
+    [SerializeField] List<WFCTile> allTiles; // 인스펙터에서 등록할 타일 목록
 
-    DungeonPostProcessor postProcessor;
-    DungeonBaker dungeonBaker;
-    GameObject[,,] spawnedObjects; // 생성된 오브젝트 추적용 배열
-    List<WFCTile>[,,] grid;
+    DungeonBaker            dungeonBaker;
+    GameObject[,,]          spawnedObjects; // 생성된 오브젝트 추적용 배열
+    List<WFCTile>[,,]       grid;
 
     Vector3Int[] directions = {
         Vector3Int.up, Vector3Int.down, 
@@ -25,10 +24,8 @@ public class WFCGenerator : MonoBehaviour
 
     void Start()
     {
-        postProcessor = GetComponent<DungeonPostProcessor>();
         dungeonBaker = GetComponent<DungeonBaker>();
         InitializeGrid();
-        // Generate();
         StartCoroutine(Generate());
     }
 
@@ -60,7 +57,6 @@ public class WFCGenerator : MonoBehaviour
         grid[coords.x, coords.y, coords.z] = new List<WFCTile>(allTiles);
     }
 
-    // 2. 생성 루프
     IEnumerator Generate()
     {
         int retry = 0, maxRetry = 100;
@@ -84,8 +80,12 @@ public class WFCGenerator : MonoBehaviour
                 Propagate(currentCoords);
 
                 collapsedCount++;
+
+                //////////////////////////////////
+                // 과정을 눈으로 보기 위해 딜레이
                 //DrawMap(); // 맵 그리기
-                //yield return new WaitForSeconds(0.005f); // 과정을 눈으로 보기 위해 딜레이
+                //yield return new WaitForSeconds(0.005f); 
+                //////////////////////////////////
             }
             if (CheckIsolatedIsland())
             {
@@ -100,7 +100,6 @@ public class WFCGenerator : MonoBehaviour
         }
 
         DrawMap(); // 최종 맵 생성
-
 
         if (OnNavMeshBuild)
         {
@@ -190,7 +189,7 @@ public class WFCGenerator : MonoBehaviour
 
     void Propagate(Vector3Int startCoords)
     {
-        // 간단한 전파 구현: 현재 셀의 상하좌우앞뒤 이웃만 검사
+        // 전파 현재 셀의 상하좌우앞뒤 이웃만 검사
 
         foreach (var dir in directions)
         {

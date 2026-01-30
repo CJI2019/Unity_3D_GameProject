@@ -22,18 +22,19 @@ public class MonsterSpawner : MonoBehaviour
     public event Action OnInit;
 
     static int rayCastingLayerMask = 0;
-    float radius = 25f;
-    int angleStep = 1;
-    float spawnCooldown = 3.0f;
-    float lastSpawnTime = 0;
-    int currentMonsterCount = 0;
-    int activeMosnterListIndex = 0;
+    int angleStep                  = 1;
+    int currentMonsterCount        = 0;
+    int activeMosnterListIndex     = 0;
+    float radius                   = 25f;
+    float spawnCooldown            = 3.0f;
+    float lastSpawnTime            = 0;
 
     Dictionary<int,NavMeshAgent> activeMonsterList = new Dictionary<int, NavMeshAgent>();
 
     void Awake()
     {
         NavMesh.pathfindingIterationsPerFrame = monsterCountLimit;
+
         rayCastingLayerMask = 1 << LayerMask.NameToLayer("Default");
     }
 
@@ -41,7 +42,7 @@ public class MonsterSpawner : MonoBehaviour
     {
         for(int i = 0 ; i < monsterList.Count;++i)
         {
-            var monster = monsterList[i];
+            var monster     = monsterList[i];
             var monsterPool = new GenericObjectPool<Monster>(monster.prefab, 1, transform);
             PoolManager.Instance.RegisterPool(monster.poolKey, monsterPool);
         }
@@ -70,13 +71,13 @@ public class MonsterSpawner : MonoBehaviour
             }
 
             float radian = angle * Mathf.Deg2Rad;
-            float x = center.x + radius * Mathf.Cos(radian);
-            float z = center.z + radius * Mathf.Sin(radian);
+            float x      = center.x + radius * Mathf.Cos(radian);
+            float z      = center.z + radius * Mathf.Sin(radian);
 
-            Vector3 pointPos = new Vector3(x, center.y, z);
+            Vector3 pointPos  = new Vector3(x, center.y, z);
             Vector3 direction = Vector3.down;
 
-            float distance = 20.0f;
+            float distance   = 20.0f;
             var rayOriginPos = pointPos + Vector3.up * (distance - 5.0f);
 
             if (Physics.Raycast(rayOriginPos, Vector3.down, out hit, distance, rayCastingLayerMask, QueryTriggerInteraction.Ignore))
@@ -187,7 +188,7 @@ public class MonsterSpawner : MonoBehaviour
     public static Vector3 GetScatteredPosition(Vector3 playerPos, float minR, float maxR)
     {
         // 각 몬스터마다 랜덤한 각도와 거리를 계산
-        float angle = UnityEngine.Random.Range(0f, 360f) * Mathf.Deg2Rad;
+        float angle    = UnityEngine.Random.Range(0f, 360f) * Mathf.Deg2Rad;
         float distance = UnityEngine.Random.Range(minR, maxR);
 
         float x = playerPos.x + Mathf.Cos(angle) * distance;
@@ -197,7 +198,7 @@ public class MonsterSpawner : MonoBehaviour
 
         RaycastHit hit;
         float rayDistance = 20.0f;
-        var rayOriginPos = pointPos + Vector3.up * (rayDistance - 5.0f);
+        var rayOriginPos  = pointPos + Vector3.up * (rayDistance - 5.0f);
         if (Physics.Raycast(rayOriginPos, Vector3.down, out hit, rayDistance, rayCastingLayerMask, QueryTriggerInteraction.Ignore))
         {
             return hit.point;

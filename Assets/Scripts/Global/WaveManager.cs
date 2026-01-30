@@ -7,9 +7,10 @@ public class WaveManager : MonoBehaviour
 {
     [SerializeField] MonsterSpawner spawner;
     [SerializeField] DungeonBaker dungeonBaker;
-    public List<WaveData> waves; // 웨이브 데이터 목록 (Inspector 할당)
+    [SerializeField] List<WaveData> waves; // 웨이브 데이터
+
     int currentWaveIndex = 0;
-    int initCount = 0;
+    int initCount        = 0;
 
     void Awake()
     {
@@ -55,9 +56,8 @@ public class WaveManager : MonoBehaviour
             yield return new WaitForSeconds(entry.spawnStartTime);
         }
 
-        Transform player = GameObject.FindWithTag("Player").transform;
-
-        Vector3 playerPos = GetPlayerUnderPos(player);
+        Transform player            = GameObject.FindWithTag("Player").transform;
+        Vector3 playerPos           = GetPlayerUnderPos(player);
         float lastPlayerPosSyncTime = Time.time;
 
         // 군집 패턴일 경우, 이번 그룹이 사용할 공통 기준점(Anchor) 생성
@@ -68,7 +68,7 @@ public class WaveManager : MonoBehaviour
         }
 
         float angleStep = 360f / entry.count;
-        int retryCount = 0;
+        int retryCount  = 0;
 
         for (int i = 0; i < entry.count; i++)
         {
@@ -76,7 +76,7 @@ public class WaveManager : MonoBehaviour
             // 플레이어 좌표 갱신
             if(lastPlayerPosSyncTime < Time.time - 3f)
             {
-                playerPos = GetPlayerUnderPos(player);
+                playerPos             = GetPlayerUnderPos(player);
                 lastPlayerPosSyncTime = Time.time;
             }
 
@@ -125,7 +125,7 @@ public class WaveManager : MonoBehaviour
         RaycastHit hit;
 
         float rayDistance = 20.0f;
-        var rayOriginPos = player.position + Vector3.up;
+        var rayOriginPos  = player.position + Vector3.up;
 
         if (Physics.Raycast(rayOriginPos, Vector3.down, out hit, rayDistance, MonsterSpawner.GetRayCastLayer(), QueryTriggerInteraction.Ignore))
         {

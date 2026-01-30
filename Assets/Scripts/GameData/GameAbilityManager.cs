@@ -28,7 +28,7 @@ public class GameAbilityManager : MonoBehaviour
     //Event
     public event Action OnInit;
 
-    public const string ACTIVE_TYPE = "ACTIVE";
+    public const string ACTIVE_TYPE  = "ACTIVE";
     public const string PASSIVE_TYPE = "PASSIVE";
 
     void Start()
@@ -55,10 +55,8 @@ public class GameAbilityManager : MonoBehaviour
 
     public AbilityData GetRandomWeapon()
     {
-        var weaponList = abilityDataBase.GetAbilityDataByAbilityType(ACTIVE_TYPE);
-
-        var level1List = weaponList.FindAll(p => p.level == 1);
-
+        var weaponList        = abilityDataBase.GetAbilityDataByAbilityType(ACTIVE_TYPE);
+        var level1List        = weaponList.FindAll(p => p.level == 1);
         var selectWeaponIndex = UnityEngine.Random.Range(0,level1List.Count);
 
         return level1List[selectWeaponIndex];
@@ -66,8 +64,8 @@ public class GameAbilityManager : MonoBehaviour
 
     public AbilityData GetRandomPassive(int level)
     {
-        var passiveList = abilityDataBase.GetAbilityDataByAbilityType(PASSIVE_TYPE);
-        var passiveUniqueList = passiveList.DistinctBy(i => i.abilityType).ToList();
+        var passiveList        = abilityDataBase.GetAbilityDataByAbilityType(PASSIVE_TYPE);
+        var passiveUniqueList  = passiveList.DistinctBy(i => i.abilityType).ToList();
         var selectPassiveIndex = UnityEngine.Random.Range(0,passiveUniqueList.Count);
 
         AbilityData selectPassive = passiveUniqueList[selectPassiveIndex];
@@ -82,12 +80,12 @@ public class GameAbilityManager : MonoBehaviour
 
     public List<AbilityData> RandomAbilityList()
     {
-        var db = abilityDataBase;
+        var db         = abilityDataBase;
         var allAbility = db.GetAllAbilityData();
-        // 중복 종류 제거
-        var uniqueAbilitys = allAbility.DistinctBy(x => x.abilityType).ToList();
-        var rand = new System.Random();
-        var selected = uniqueAbilitys.OrderBy(x => rand.Next()).Take(3).ToList();
+        
+        var uniqueAbilitys = allAbility.DistinctBy(x => x.abilityType).ToList(); // 중복 종류 제거
+        var rand           = new System.Random();
+        var selected       = uniqueAbilitys.OrderBy(x => rand.Next()).Take(3).ToList();
 
         return selected;
     }
