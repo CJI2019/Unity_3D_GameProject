@@ -5,6 +5,7 @@ public class PlayerWeapon : MonoBehaviour
 {
     [SerializeField] OrbitWeaponManager orbitWeaponManager;
     [SerializeField] BulletWeaponManager bulletWeaponManager;
+    [SerializeField] SwordWeaponManager swordWeaponManager;
 
     public void LevelUpWeapon(AbilityType weaponType, int level)
     {
@@ -19,6 +20,9 @@ public class PlayerWeapon : MonoBehaviour
             break;
             case AbilityType.ORBIT:
                 orbitWeaponManager.SetWeaponData(weapon);
+            break;
+            case AbilityType.SWORD:
+                swordWeaponManager.SetWeaponData(weapon);
             break;
         }
     }

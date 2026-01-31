@@ -10,7 +10,7 @@ public class Monster : LivingEntity , IAttacker
     public float AttackRange {get;}
     public float AttackCoolDown {get;}
 
-    public void Attack()
+    public void Attack(Collider other)
     {
     }
 

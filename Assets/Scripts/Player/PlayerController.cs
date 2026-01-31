@@ -128,4 +128,9 @@ public class PlayerController : MonoBehaviour
             transformPlayerModel.rotation = Quaternion.Slerp(transformPlayerModel.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
     }
+
+    public Transform GetPlayerModelTransform()
+    {
+        return transformPlayerModel;
+    }
 }

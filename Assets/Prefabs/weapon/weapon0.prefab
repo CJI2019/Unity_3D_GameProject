@@ -126,7 +126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8207e7f3ac202ca4b942f5477d8710e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OrbitWeapon
-  attackRate: 2
+  attackRange: 10
   _damage: 10
   rotateSpeed: 180
   distance: 4

@@ -24,6 +24,8 @@ public class AbilityData {
                 return AbilityType.ORBIT;
             case "ITEMRANGE":
                 return AbilityType.ITEMRANGE;
+            case "SWORD":
+                return AbilityType.SWORD;
         }
 
         return 0;
@@ -33,7 +35,7 @@ public class AbilityData {
 
 public enum AbilityType 
 { 
-    BULLET,ORBIT,ITEMRANGE
+    BULLET,ORBIT,ITEMRANGE, SWORD
 }
 
 [System.Serializable]

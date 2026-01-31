@@ -55,12 +55,18 @@ public class PlayerAbility : MonoBehaviour
 
         switch (data.abilityType)
         {
+            // Active 무기
             case AbilityType.BULLET:
             case AbilityType.ORBIT:
+            case AbilityType.SWORD:
                 playerWeapon.LevelUpWeapon(data.abilityType, data.level);
             break;
+            // Passive 버프
             case AbilityType.ITEMRANGE:
                 itemSensor.SetAbilityData(data);
+            break;
+            default:
+                Debug.LogError("Unknown Ability Type");
             break;
         }
     }

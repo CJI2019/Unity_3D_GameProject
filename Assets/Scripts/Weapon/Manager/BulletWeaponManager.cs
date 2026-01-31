@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BulletWeaponManager : WeaponManager
@@ -5,28 +7,35 @@ public class BulletWeaponManager : WeaponManager
     [SerializeField] BulletWeapon weaponPrefab;
     const string poolKey = "BulletWeapon";
     
+    float attackInterval   = 5f;
+    float lastAttackTime   = 0f;
+    float bulletSpawnDelay = 0.1f;
+
     void Start()
     {
         SetPoolKey(poolKey);
         RegisterWeapon(weaponPrefab,poolKey);
-        // 레벨과 무기 개수에 따라서 업데이트 되어야함.
-        // AddWeapon<BulletWeapon>(10);
-    }
-    protected override void AddWeaponBySubClass(int count)
-    {
-        AddWeapon<BulletWeapon>(count);
+
+        enabled = false;
     }
 
-    public override void UpdateWeapons()
+    void Update()
     {
-        var length = activeWeapons.Count;
+        if (lastAttackTime > Time.time) return;
+        lastAttackTime = Time.time + attackInterval;
 
-        for (int i = 0; i < length; ++i)
+        StartCoroutine(SpawnBullet(bulletSpawnDelay));
+    }
+
+    IEnumerator SpawnBullet(float delay)
+    {
+        var wfs = new WaitForSeconds(delay);
+
+        for (int i = 0; i < weaponData.weaponCount; ++i)
         {
-            var bulletWeapon = activeWeapons[i] as BulletWeapon;
-            if(!bulletWeapon) continue;
-
-            bulletWeapon.Initialize(transform,i * 0.1f);
+            BulletWeapon weapon = AddWeapon<BulletWeapon>();
+            weapon.Initialize(this,weaponData.damage);
+            yield return wfs;
         }
     }
 }

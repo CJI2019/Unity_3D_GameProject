@@ -493,6 +493,11 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!4 &559395217 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8620295925180584775, guid: c82a0c15b12125f4b91f7c01ac64c3ba, type: 3}
+  m_PrefabInstance: {fileID: 3575763481075691992}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &616604373
 GameObject:
   m_ObjectHideFlags: 0
@@ -1418,6 +1423,51 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1342249731
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1342249732}
+  - component: {fileID: 1342249733}
+  m_Layer: 6
+  m_Name: SwordWeapon Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1342249732
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1342249731}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3575763481075691993}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1342249733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1342249731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97e9320df61137847a12e77b6eed157b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SwordWeaponManager
+  weaponPrefab: {fileID: 7262163010219636442, guid: f0c9df5135d28f441bcaf692a22ddd5e, type: 3}
 --- !u!1 &1383707119
 GameObject:
   m_ObjectHideFlags: 0
@@ -1909,6 +1959,21 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3094717663593481319, guid: c82a0c15b12125f4b91f7c01ac64c3ba, type: 3}
   m_PrefabInstance: {fileID: 3575763481075691992}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1760087012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1760087005}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 483e2801974f5e644ae7236088929e83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelectGizmo
+  targetObject: {fileID: 559395217}
+  radius: 4
+  angle: 220
 --- !u!1 &1914256987
 GameObject:
   m_ObjectHideFlags: 0
@@ -2344,11 +2409,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6134902328600098832, guid: c82a0c15b12125f4b91f7c01ac64c3ba, type: 3}
+      propertyPath: swordWeaponManager
+      value: 
+      objectReference: {fileID: 1342249733}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 3265631970518993723, guid: c82a0c15b12125f4b91f7c01ac64c3ba, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1342249732}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3094717663593481319, guid: c82a0c15b12125f4b91f7c01ac64c3ba, type: 3}
+      insertIndex: 2
+      addedObject: {fileID: 1760087012}
   m_SourcePrefab: {fileID: 100100000, guid: c82a0c15b12125f4b91f7c01ac64c3ba, type: 3}
+--- !u!4 &3575763481075691993 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3265631970518993723, guid: c82a0c15b12125f4b91f7c01ac64c3ba, type: 3}
+  m_PrefabInstance: {fileID: 3575763481075691992}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &4842106933382102333
 MonoBehaviour:
   m_ObjectHideFlags: 0

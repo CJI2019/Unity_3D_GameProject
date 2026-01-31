@@ -237,9 +237,6 @@ public class MonsterAI : MonoBehaviour
 
         //float distance = Vector3.Distance(target.position, transform.position);
 
-        //// 1. 3m 앞 장애물 확인
-        //// 2. 장애물 존재 시 navagent를 끄고 리지드바드
-
         //// 플레이어 사이에 장애물이 있는지 확인
         //if (!Physics.Raycast(transform.position, direction, distance, MonsterSpawner.GetRayCastLayer(), QueryTriggerInteraction.Ignore))
         //{
@@ -280,6 +277,7 @@ public class MonsterAI : MonoBehaviour
     {
         agent.velocity = direction * agent.speed;
 
+        if(direction == Vector3.zero) return;
         Quaternion lookRot = Quaternion.LookRotation(direction);
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRot, Time.deltaTime * 30f);
     }

@@ -112,3 +112,30 @@ MonoBehaviour:
     damage: 800
     passiveType: ITEMRANGE
     strAbilityType: ITEMRANGE
+  - id: SWORD_1
+    name: "\uAC80\uACA9"
+    type: ACTIVE
+    weaponType: SWORD
+    level: 1
+    weaponCount: 1
+    damage: 1
+    passiveType: 
+    strAbilityType: SWORD
+  - id: SWORD_2
+    name: "\uAC80\uACA9"
+    type: ACTIVE
+    weaponType: SWORD
+    level: 2
+    weaponCount: 2
+    damage: 3
+    passiveType: 
+    strAbilityType: SWORD
+  - id: SWORD_3
+    name: "\uAC80\uACA9"
+    type: ACTIVE
+    weaponType: SWORD
+    level: 3
+    weaponCount: 3
+    damage: 5
+    passiveType: 
+    strAbilityType: SWORD

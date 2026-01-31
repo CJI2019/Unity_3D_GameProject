@@ -9,26 +9,30 @@ public class OrbitWeaponManager : WeaponManager
     {
         SetPoolKey(poolKey);
         RegisterWeapon(weaponPrefab,poolKey);
-        // 레벨과 무기 개수에 따라서 업데이트 되어야함.
-        // AddWeapon<OrbitWeapon>(1);
     }
 
-    protected override void AddWeaponBySubClass(int count)
+    public override void SetWeaponData(AbilityData abilityData)
     {
-        AddWeapon<OrbitWeapon>(count);
+        weaponData = abilityData;
+
+        var addWeaponCount = weaponData.weaponCount - spawnedWeapons.Count;
+        if (addWeaponCount > 0)
+        {
+            AddWeapon<OrbitWeapon>(addWeaponCount);
+        }
     }
 
     public override void UpdateWeapons()
     {
-        var length = activeWeapons.Count;
+        var length = spawnedWeapons.Count;
 
         for (int i = 0; i < length; ++i)
         {
-            var orbitWeapon = activeWeapons[i] as OrbitWeapon;
+            var orbitWeapon = spawnedWeapons[i] as OrbitWeapon;
             if(!orbitWeapon) continue;
 
             float angle = 360f / length * i;
-            orbitWeapon.Initialize(angle);
+            orbitWeapon.Initialize(angle,weaponData.damage);
         }
     }    
 }
