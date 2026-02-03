@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public abstract class LivingEntity : MonoBehaviour, IDamageables , IPoolable
 {
@@ -17,12 +16,12 @@ public abstract class LivingEntity : MonoBehaviour, IDamageables , IPoolable
         hp = maxHp;
     }
 
-    public void TakeDamage(long amount)
+    public virtual void TakeDamage(long amount)
     {
         if(isDead) return;
     
         hp -= amount;
-        // Debug.Log($"{amount} 만큼의 데미지를 받았습니다. 현재 HP : {hp}");s
+
         if (hp <= 0)
         {
             DeathLogic();

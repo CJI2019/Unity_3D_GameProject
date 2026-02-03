@@ -7,9 +7,10 @@ public class BulletWeaponManager : WeaponManager
     [SerializeField] BulletWeapon weaponPrefab;
     const string poolKey = "BulletWeapon";
     
-    float attackInterval   = 5f;
     float lastAttackTime   = 0f;
     float bulletSpawnDelay = 0.1f;
+
+    int penetrationCount = 1;
 
     void Start()
     {
@@ -17,6 +18,31 @@ public class BulletWeaponManager : WeaponManager
         RegisterWeapon(weaponPrefab,poolKey);
 
         enabled = false;
+    }
+
+    public override void SetWeaponData(AbilityData abilityData)
+    {
+        base.SetWeaponData(abilityData);
+        int level = abilityData.level;
+
+        switch (level)
+        {
+            case 1:
+                attackInterval = 2f;
+                penetrationCount = 1;
+                break;
+            case 2:
+                attackInterval = 1f;
+                penetrationCount = 3;
+                break;
+            case 3:
+                attackInterval = 0.5f;
+                penetrationCount = 5;
+                break;
+            default:
+                Debug.LogError("존재하지 않는 레벨입니다 : " + level);
+                break;
+        }
     }
 
     void Update()
@@ -34,7 +60,7 @@ public class BulletWeaponManager : WeaponManager
         for (int i = 0; i < weaponData.weaponCount; ++i)
         {
             BulletWeapon weapon = AddWeapon<BulletWeapon>();
-            weapon.Initialize(this,weaponData.damage);
+            weapon.Initialize(this, penetrationCount,weaponData.damage);
             yield return wfs;
         }
     }

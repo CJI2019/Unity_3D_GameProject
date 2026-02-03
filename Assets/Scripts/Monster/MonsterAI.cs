@@ -1,11 +1,8 @@
 using System;
 using System.Collections;
-using System.Data;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Unity.VisualScripting;
-using UnityEditor.UI;
 using UnityEngine;
 using UnityEngine.AI;
+using static MonsterAI;
 
 public enum MonsterState
 {
@@ -36,6 +33,18 @@ public class MonsterAI : MonoBehaviour
     bool destinationFlag         = false;
     bool isGravityMode           = false;
     bool rayCastEnvironmentEmpty = false;
+    bool isGamePaused            = false;
+
+    // Monster 클래스 전용 구조체
+    public struct BeforeState
+    {
+        public bool useGravity;
+        public RigidbodyConstraints constraints;
+        public Vector3 agentVelocity;
+        public Vector3 rbVelocity;
+        public Vector3 rbAngularVelocity;
+    }
+    BeforeState beforeState;
 
     void Awake()
     {
@@ -113,11 +122,9 @@ public class MonsterAI : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Vector3 flattenMoveDir = new Vector3(
-                target.position.x - transform.position.x,
-                0f,
-                target.position.z - transform.position.z);
-        Vector3 direction = flattenMoveDir.normalized;
+        if (GameManager.Instance.IsGamePaused) return;
+
+        Vector3 direction = GetTargetDirection();
 
         if (autoClimbFlag)
         {
@@ -129,7 +136,8 @@ public class MonsterAI : MonoBehaviour
             if(currentState != MonsterState.Move) return;
             bool result = true;
 
-            if (!Physics.Raycast(transform.position, (direction + Vector3.down).normalized, 5f, MonsterSpawner.GetRayCastLayer(), QueryTriggerInteraction.Ignore))
+            // 피봇이 하단에 있을 경우 미세한 오차로 인해 점프가 발동하지 않는 경우가 있어 Vector3.up 올린 위치에서 레이캐스트를 쏜다.
+            if (!Physics.Raycast(transform.position + Vector3.up, (direction + Vector3.down).normalized, 5f, MonsterSpawner.GetRayCastLayer(), QueryTriggerInteraction.Ignore))
             {
                 agent.enabled             = false;
                 rigidBody.isKinematic     = false;
@@ -180,13 +188,50 @@ public class MonsterAI : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.Instance.IsGamePaused)
+        {
+            // 움직임 멈춤
+            if (isGamePaused) { return; }
+
+            // 직전 상태 저장
+            beforeState.useGravity        = rigidBody.useGravity;
+            beforeState.constraints       = rigidBody.constraints;
+            beforeState.agentVelocity     = agent.velocity;
+            beforeState.rbVelocity        = rigidBody.linearVelocity;
+            beforeState.rbAngularVelocity = rigidBody.angularVelocity;
+
+            // 물리력을 0으로 만들어 즉시 정지
+            isGamePaused              = true;
+            rigidBody.useGravity      = false;
+            rigidBody.constraints     = RigidbodyConstraints.FreezeAll;
+            agent.velocity            = Vector3.zero;
+
+            if (!rigidBody.isKinematic)
+            {
+                rigidBody.linearVelocity = Vector3.zero;
+                rigidBody.angularVelocity = Vector3.zero;
+            }
+            return;
+        }
+        else if (isGamePaused)
+        {
+            // 직전 상태 로드
+            rigidBody.useGravity      = beforeState.useGravity;
+            rigidBody.constraints     = beforeState.constraints;
+            agent.velocity            = beforeState.agentVelocity;
+
+            if (!rigidBody.isKinematic)
+            {
+                rigidBody.angularVelocity = beforeState.rbAngularVelocity;
+                rigidBody.linearVelocity  = beforeState.rbVelocity;
+            }
+
+            isGamePaused = false;
+        }
+
         DebugStateLog();
         // 플레이어 방향 벡터
-        Vector3 flattenMoveDir = new Vector3(
-            target.position.x - transform.position.x,
-            0f,
-            target.position.z - transform.position.z);
-        Vector3 direction = flattenMoveDir.normalized;
+        Vector3 direction = GetTargetDirection();
 
         switch (currentState)
         {
@@ -317,4 +362,12 @@ public class MonsterAI : MonoBehaviour
         onComplete?.Invoke();
     }
 
+    private Vector3 GetTargetDirection()
+    {
+        Vector3 flattenMoveDir = new Vector3(
+            target.position.x - transform.position.x,
+            0f,
+            target.position.z - transform.position.z);
+        return flattenMoveDir.normalized;
+    }
 }

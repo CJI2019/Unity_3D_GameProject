@@ -54,4 +54,8 @@ public abstract class WeaponBase : MonoBehaviour , IPoolable , IWeapon
         HandleTrigger(other);
     }
 
+    public void SetAttackRange(float range)
+    {
+        attackRange = range;
+    }
 }

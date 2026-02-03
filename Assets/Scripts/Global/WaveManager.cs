@@ -39,9 +39,15 @@ public class WaveManager : MonoBehaviour
                 StartCoroutine(SpawnRoutine(entry));
             }
 
+            
             // 웨이브 지속 시간만큼 대기
             yield return new WaitForSeconds(currentWave.duration);
             
+            while (GameManager.Instance.IsGamePaused)
+            {
+                yield return null;
+            }
+
             currentWaveIndex++;
         }
 
@@ -116,6 +122,11 @@ public class WaveManager : MonoBehaviour
 
             if (entry.spawnInterval > 0) yield return new WaitForSeconds(entry.spawnInterval);
             else yield return null; //프레임 분산
+
+            while (GameManager.Instance.IsGamePaused)
+            {
+                yield return null;
+            }
         }
     }
 

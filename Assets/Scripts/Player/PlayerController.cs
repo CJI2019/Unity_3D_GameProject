@@ -2,13 +2,21 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("플레이어 애니메이션 설정")]
+    [SerializeField] Animator animator;
+    [SerializeField] string string_bool_IsMoving   = "IsMoving";
+    [SerializeField] string string_bool_IsJumping  = "IsJumping";
+    [SerializeField] string string_bool_IsFalling  = "IsFalling";
+    [SerializeField] string string_bool_IsGrounded = "IsGrounded";
+
+    [Header("플레이어 컨트롤러 설정")]
     [SerializeField] Transform transformPlayerModel;
-    [SerializeField] float moveSpeed = 5f;
-    [SerializeField] float rotationSpeed = 10f;
-    [SerializeField] float jumpHeight = 10f;
-    [SerializeField] float gravity = -15f;
-    [SerializeField] float groundOffset = 0.1f;
-    [SerializeField] float groundRadius = 0.5f;
+    [SerializeField] float moveSpeed        = 5f;
+    [SerializeField] float rotationSpeed    = 10f;
+    [SerializeField] float jumpHeight       = 10f;
+    [SerializeField] float gravity          = -15f;
+    [SerializeField] float groundOffset     = 0.1f;
+    [SerializeField] float groundRadius     = 0.5f;
     [SerializeField] float airControlFactor = 0.6f;
     [SerializeField] LayerMask groundLayer;
 
@@ -18,18 +26,21 @@ public class PlayerController : MonoBehaviour
     Vector3 lastGroundMoveDir;
     Vector3 airVelocity; // 점프 시 수평 속도 
     float verticalVelocity = 0f;
-    bool isJump = false;
-    bool triggerJump = false;
-    bool isGrounded = true;
+    bool isJump            = false;
+    bool triggerJump       = false;
+    bool isGrounded        = true;
 
     void Start()
     {
         controller = GetComponent<CharacterController>();
         playerInput = GetComponent<PlayerInputManager>();
+        animator = GetComponentInChildren<Animator>();
     }
 
     void Update()
     {
+        if(GameManager.Instance.IsGamePaused) return;
+        
         JumpAndGravity();
         GroundedCheck();
         Move();
@@ -49,12 +60,17 @@ public class PlayerController : MonoBehaviour
                 verticalVelocity = Mathf.Sqrt(2 * -g * jumpHeight); // 등가속도
                 airVelocity.Set(moveDir.x * airControlFactor, 0f, moveDir.z * airControlFactor);
                 triggerJump = true;
+                animator.SetBool(string_bool_IsFalling, false);
+                animator.SetBool(string_bool_IsGrounded, false);
+                animator.SetBool(string_bool_IsJumping, true);
             }
             else
             {
                 verticalVelocity = 0f;
                 airVelocity.Set(0f, 0f, 0f);
-                lastGroundMoveDir.Set(0f,0f,0f);
+                lastGroundMoveDir.Set(0f, 0f, 0f);
+                animator.SetBool(string_bool_IsGrounded, true);
+                animator.SetBool(string_bool_IsFalling, false);
             }
         }
         else
@@ -62,6 +78,8 @@ public class PlayerController : MonoBehaviour
             verticalVelocity += gravity * Time.deltaTime;
             isJump = false;
             triggerJump = false;
+            animator.SetBool(string_bool_IsJumping, false);
+            animator.SetBool(string_bool_IsFalling, true);
         }
     }
 
@@ -74,10 +92,10 @@ public class PlayerController : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Color transparentGreen = new Color(0.0f, 1.0f, 0.0f, 0.75f);
-        Color transparentRed = new Color(1.0f, 0.0f, 0.0f, 0.75f);
+        Color transparentRed   = new Color(1.0f, 0.0f, 0.0f, 0.75f);
 
         if (isGrounded) Gizmos.color = transparentGreen;
-        else Gizmos.color = transparentRed;
+        else Gizmos.color            = transparentRed;
 
         Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - groundOffset, transform.position.z), groundRadius);
     }
@@ -86,7 +104,7 @@ public class PlayerController : MonoBehaviour
     {
         var camera = playerInput.GetCamera();
 
-        Vector3 look = camera.transform.forward;
+        Vector3 look  = camera.transform.forward;
         Vector3 right = camera.transform.right;
 
         var frontMove = look * playerInput.move.y;
@@ -95,15 +113,16 @@ public class PlayerController : MonoBehaviour
 
         Vector3 velocity;
         moveDir = (frontMove + rightMove).normalized;
-        
-        if (isGrounded) {
+
+        if (isGrounded)
+        {
             velocity = moveDir * moveSpeed;
         }
-        else 
+        else
         { // 공중 이동
-            if(lastGroundMoveDir != Vector3.zero)
+            if (lastGroundMoveDir != Vector3.zero)
             {
-                velocity = (lastGroundMoveDir + moveDir * airControlFactor).normalized * moveSpeed;   
+                velocity = (lastGroundMoveDir + moveDir * airControlFactor).normalized * moveSpeed;
             }
             else
             {
@@ -111,9 +130,14 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if(playerInput.move == Vector2.zero)
+        if (playerInput.move == Vector2.zero)
         {
-            lastGroundMoveDir.Set(0f,0f,0f);
+            lastGroundMoveDir.Set(0f, 0f, 0f);
+            animator.SetBool(string_bool_IsMoving, false);
+        }
+        else
+        {
+            animator.SetBool(string_bool_IsMoving, true);
         }
 
         velocity.y = verticalVelocity;
@@ -132,5 +156,10 @@ public class PlayerController : MonoBehaviour
     public Transform GetPlayerModelTransform()
     {
         return transformPlayerModel;
+    }
+
+    public Animator GetPlayerAnimation()
+    {
+        return animator;
     }
 }

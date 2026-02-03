@@ -32,3 +32,9 @@ MonoBehaviour:
     pattern: 2
     spawnInterval: 0
     circleRadius: 35
+  - monsterPoolKey: BossA
+    count: 1
+    spawnStartTime: 20
+    pattern: 0
+    spawnInterval: 0
+    circleRadius: 35

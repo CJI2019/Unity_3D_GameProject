@@ -3,17 +3,25 @@ using UnityEngine;
 
 public class OrbitWeapon : WeaponBase
 {
-    [SerializeField] float rotateSpeed = 100f;
     [SerializeField] float distance = 4f;
 
-    public void Initialize(float angle,long damage)
+    float rotateSpeed = 100f;
+    Vector3 defaultWeaponScale;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        defaultWeaponScale = transform.localScale;
+    }
+
+    public void Initialize(float angle,float rotateSpeed, long damage)
     {
         // 회전 시작 로컬 위치 및 로컬 각도 조정
-        transform.localRotation = Quaternion.Euler(90f,0f,0f);
         transform.localPosition = new Vector3(0f,0f,distance);        
         transform.RotateAround(owner.position, Vector3.up, angle);
 
         this.damage = damage;
+        this.rotateSpeed = rotateSpeed;
     }
 
     void Update()

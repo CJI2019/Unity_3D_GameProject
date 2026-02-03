@@ -6,17 +6,20 @@ public class BulletWeapon : WeaponBase
     Vector3 dir;
     Vector3 attackStartPos;
 
-    public void Initialize(BulletWeaponManager myMgr,long damage)
+    int penetrationCount = 1;
+
+    public void Initialize(BulletWeaponManager myMgr,int penetrationCount, long damage)
     {
         manager = myMgr;
 
         transform.SetParent(PoolManager.Instance.gameObject.transform);
 
-        this.damage        = damage;
-        owner              = manager.transform;
-        transform.position = owner.position;
-        attackStartPos     = transform.position;
-        
+        this.damage             = damage;
+        this.penetrationCount   = penetrationCount;
+        owner                   = manager.transform;
+        transform.position      = owner.position;
+        attackStartPos          = transform.position;
+
         // 가장 가까운 몬스터 방향 찾기 : 위치 초기화 이후 진행되어야함.
         dir = GetDirectionToClosestMonster();
     }
@@ -26,6 +29,10 @@ public class BulletWeapon : WeaponBase
         if (dir != Vector3.zero)
         {
             transform.position += dir * Time.deltaTime * speed;
+        }
+        else
+        {
+            manager.DeActiveWeapon(this);
         }
 
         // 사정거리 벗어나면 비활성화
@@ -68,7 +75,13 @@ public class BulletWeapon : WeaponBase
     public override void Attack(Collider other)
     {
         base.Attack(other);
-        manager.DeActiveWeapon(this);
+
+        --penetrationCount;
+        if (penetrationCount <= 0)
+        {
+            manager.DeActiveWeapon(this);
+        }
+
         //Hit Effect 발동 등 추가
     }
 }

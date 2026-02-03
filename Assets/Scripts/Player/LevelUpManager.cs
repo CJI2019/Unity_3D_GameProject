@@ -41,6 +41,7 @@ public class LevelUpManager : MonoBehaviour
 
     void OnSelectAbilityWindow(int level)
     {
+        GameManager.Instance.GamePaused(true);
         if(abilitySelectWait) return;
         
         var gam = GameAbilityManager.Instance;
@@ -65,5 +66,7 @@ public class LevelUpManager : MonoBehaviour
         
         player.SyncAbility(newAbilityData);
         abilitySelectWait = false;
+        
+        GameManager.Instance.GamePaused(false);
     }
 }

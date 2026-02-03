@@ -1,4 +1,5 @@
 using System.Collections;
+using TreeEditor;
 using Unity.AppUI.UI;
 using UnityEngine;
 
@@ -10,13 +11,14 @@ public class SwordWeapon : WeaponBase
     Transform playerModelTransform;
     ParticleSystem slashVFX;
     Collider[] hits = new Collider[100]; // 몬스터 충돌체 저장용
-    Vector3 dir;
-    Vector3 attackStartPos;
+
+    Vector3 defaultWeaponScale;
 
     protected override void Awake()
     {
         base.Awake();
         slashVFX = GetComponent<ParticleSystem>();
+        defaultWeaponScale = transform.localScale;
     }
 
     protected override void Start()
@@ -24,20 +26,25 @@ public class SwordWeapon : WeaponBase
         base.Start();
     }
 
-    public void Initialize(SwordWeaponManager myMgr, long damage)
+    public void Initialize(SwordWeaponManager myMgr,float weaponScale, long damage)
     {
         manager = myMgr;
 
         this.damage = damage;
-        transform.position = owner.position + Random.onUnitSphere; 
-        attackStartPos = transform.position;
 
         if(playerModelTransform == null)
         {
             playerModelTransform = owner.GetComponent<PlayerController>().GetPlayerModelTransform();
         }
+
+        // 랜덤 Offset 주기
+        var offsetVector = (playerModelTransform.right + playerModelTransform.up).normalized
+            * (Random.value - 0.5f) * weaponScale;
+        
+        transform.position = owner.position + offsetVector;
         transform.rotation = Quaternion.LookRotation(playerModelTransform.forward);
-         
+        transform.localScale = defaultWeaponScale * weaponScale;
+
         slashVFX.Play();
 
         StartCoroutine(AttackCoroutine(
@@ -56,13 +63,6 @@ public class SwordWeapon : WeaponBase
         }
     }
 
-    public override void Attack(Collider other)
-    {
-        base.Attack(other);
-        manager.DeActiveWeapon(this);
-        //Hit Effect 발동 등 추가
-    }
-
     IEnumerator AttackCoroutine(Vector3 center, Vector3 forward, float radius, float angle)
     {
         yield return new WaitForSeconds(attackDelay);
@@ -77,10 +77,11 @@ public class SwordWeapon : WeaponBase
             Vector3 dir = (hit.transform.position - center).normalized;
 
             // forward와 dir 사이의 코사인 값
-            float dot = Vector3.Dot(forward.normalized, dir);
+            float dot = Vector3.Dot(forward, dir);
 
             if (dot >= cosHalfAngle)
             {
+                //Debug.DrawLine(center, hit.transform.position, Color.green, 1.0f);
                 var damageble = hit.GetComponent<IDamageables>();
                 damageble?.TakeDamage(damage);
             }

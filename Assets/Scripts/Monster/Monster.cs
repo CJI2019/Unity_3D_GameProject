@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Monster : LivingEntity , IAttacker
 {
+    [SerializeField] float itemSpawnHeight = 1.0f;
+    [SerializeField] long damage           = 1;
+
     public event Action<Monster> OnMonsterDead;
     string poolKey = "";
 
@@ -12,6 +15,7 @@ public class Monster : LivingEntity , IAttacker
 
     public void Attack(Collider other)
     {
+        other.GetComponent<LivingEntity>()?.TakeDamage(damage);
     }
 
     public void SetPoolKey(string poolKey)
@@ -25,12 +29,20 @@ public class Monster : LivingEntity , IAttacker
 
         foreach (var item in spawnItems)
         {
-            item.transform.position = transform.position;
+            item.transform.position = transform.position + Vector3.up * itemSpawnHeight;
         }
         
         OnMonsterDead?.Invoke(this);
         OnMonsterDead = null;
         
         PoolManager.Instance.Return<Monster>(poolKey,this);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Player"))
+        {
+            Attack(other);
+        }
     }
 }

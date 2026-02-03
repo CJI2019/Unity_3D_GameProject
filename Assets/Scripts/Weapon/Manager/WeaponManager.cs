@@ -4,6 +4,8 @@ using UnityEngine;
 
 public abstract class WeaponManager : MonoBehaviour
 {
+    [SerializeField] protected float attackInterval = 2f;
+
     protected List<IWeapon> spawnedWeapons;
     string poolKey;
     protected AbilityData weaponData;

@@ -139,3 +139,30 @@ MonoBehaviour:
     damage: 5
     passiveType: 
     strAbilityType: SWORD
+  - id: THUNDERSTRIKE_1
+    name: "\uB099\uB8B0"
+    type: ACTIVE
+    weaponType: THUNDERSTRIKE
+    level: 1
+    weaponCount: 1
+    damage: 1
+    passiveType: 
+    strAbilityType: THUNDERSTRIKE
+  - id: THUNDERSTRIKE_2
+    name: "\uB099\uB8B0"
+    type: ACTIVE
+    weaponType: THUNDERSTRIKE
+    level: 2
+    weaponCount: 3
+    damage: 3
+    passiveType: 
+    strAbilityType: THUNDERSTRIKE
+  - id: THUNDERSTRIKE_3
+    name: "\uB099\uB8B0"
+    type: ACTIVE
+    weaponType: THUNDERSTRIKE
+    level: 3
+    weaponCount: 5
+    damage: 5
+    passiveType: 
+    strAbilityType: THUNDERSTRIKE

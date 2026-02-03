@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -11,5 +12,5 @@ public class ExpItem : PickUp
         playerAbility?.AddExp(exp);
 
         DropItemManager.Instance.ItemDeSpawn(this);
-    }
+    }    
 }
