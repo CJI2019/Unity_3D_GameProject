@@ -3,7 +3,6 @@ using UnityEngine;
 public class SceneSingleton<T> : MonoBehaviour where T : MonoBehaviour
 {
     private static T _instance;
-
     public static T Instance
     {
         get
@@ -13,12 +12,14 @@ public class SceneSingleton<T> : MonoBehaviour where T : MonoBehaviour
                 _instance = (T)FindFirstObjectByType(typeof(T));
                 if (_instance == null)
                 {
+                    // 매니저 오브젝트를 배치하지 않았을 때를 대비한 방어 코드
                     GameObject obj = new GameObject(typeof(T).Name);
                     _instance = obj.AddComponent<T>();
                 }
             }
             return _instance;
         }
+
     }
 
     protected virtual void Awake()
@@ -29,6 +30,15 @@ public class SceneSingleton<T> : MonoBehaviour where T : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
         _instance = this as T;
+    }
+
+    protected virtual void OnDestroy()
+    {
+        if (_instance == this)
+        {
+            _instance = null;
+        }
     }
 }

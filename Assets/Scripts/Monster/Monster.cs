@@ -5,7 +5,7 @@ using UnityEngine;
 public class Monster : LivingEntity , IAttacker
 {
     [SerializeField] float itemSpawnHeight = 1.0f;
-    [SerializeField] long damage           = 1;
+    [SerializeField] long originDamage     = 1;
 
     public event Action<Monster> OnMonsterDead;
     string poolKey = "";
@@ -13,9 +13,27 @@ public class Monster : LivingEntity , IAttacker
     public float AttackRange {get;}
     public float AttackCoolDown {get;}
 
+    long damage;
+    ExpItemEntry expItemEntry;
+
+    protected void Awake()
+    {
+        damage = originDamage;
+    }
+
     public void Attack(Collider other)
     {
         other.GetComponent<LivingEntity>()?.TakeDamage(damage);
+    }
+
+    public void MultiplyDamage(float damage_Weight)
+    {
+        damage = (long)(originDamage * damage_Weight);
+    }
+
+    public void SetExpItemEntry(ExpItemEntry expItemEntry)
+    {
+        this.expItemEntry = expItemEntry;
     }
 
     public void SetPoolKey(string poolKey)
@@ -23,13 +41,24 @@ public class Monster : LivingEntity , IAttacker
         this.poolKey = poolKey;
     }
 
+    public override void TakeDamage(long amount)
+    {
+        if(isDead) return;
+
+        base.TakeDamage(amount);
+        
+        
+    }
+
     protected override void DeathLogic()
     {
-        List<ExpItem> spawnItems = DropItemManager.Instance.ItemSpawn<ExpItem>(1);
+        List<ExpItem> spawnExpItems = DropItemManager.Instance.ItemSpawn<ExpItem>(1);
 
-        foreach (var item in spawnItems)
+        foreach (var exp in spawnExpItems)
         {
-            item.transform.position = transform.position + Vector3.up * itemSpawnHeight;
+            exp.transform.position = transform.position + Vector3.up * itemSpawnHeight;
+            MeshManager.Instance.SwapMesh(exp.gameObject,expItemEntry.GetMeshId());
+            exp.SetExp(expItemEntry.exp);
         }
         
         OnMonsterDead?.Invoke(this);
@@ -45,4 +74,5 @@ public class Monster : LivingEntity , IAttacker
             Attack(other);
         }
     }
+
 }

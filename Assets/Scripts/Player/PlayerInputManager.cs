@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class PlayerInputManager : MonoBehaviour
 {
+    [SerializeField] bool isCursorLocak = true;
     PlayerInput playerInput;
     public Vector2 move;
     public bool jump = false;
@@ -10,12 +11,14 @@ public class PlayerInputManager : MonoBehaviour
     void Start()
     {
         playerInput = GetComponent<PlayerInput>();
-        SetCursorLockMode(true);
+        SetCursorLockMode(isCursorLocak);
     }
+
     public void OnMove(InputValue value)
     {
         move = value.Get<Vector2>();
     }
+
     public void OnJump(InputValue value)
     {
         jump = value.isPressed;

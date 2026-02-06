@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4bd8c9372aa33944aa340018482f5d3, type: 3}
+  m_Name: ExpItemDataBase
+  m_EditorClassIdentifier: Assembly-CSharp::MeshDataBase
+  entryList:
+  - {fileID: 11400000, guid: 3e650bfb941ffc647aa06d950f86b977, type: 2}
+  - {fileID: 11400000, guid: d8c24be74e07e284193773e1a2527b9d, type: 2}
+  - {fileID: 11400000, guid: 46b6d6b0a7ee0ea40aace4c89457b5fb, type: 2}

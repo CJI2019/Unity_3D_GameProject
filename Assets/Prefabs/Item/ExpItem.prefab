@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef433f08a4dc09646a3febc38e0cf7e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExpItem
-  exp: 30
+  exp: 2
 --- !u!114 &7454202053439269143
 MonoBehaviour:
   m_ObjectHideFlags: 0

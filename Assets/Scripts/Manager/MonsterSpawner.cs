@@ -212,13 +212,15 @@ public class MonsterSpawner : MonoBehaviour
         return center + new Vector3(Mathf.Cos(angle) * radius, 0, Mathf.Sin(angle) * radius);
     }
 
-    public void SpawnMonster(string poolKey,Vector3 spawnPos)
+    public Monster SpawnMonster(string poolKey,Vector3 spawnPos)
     {
         Monster spawnMonster = PoolManager.Instance.Get<Monster>(poolKey);
         spawnMonster.SetPoolKey(poolKey);
 
-        var ai = spawnMonster.GetComponent<MonsterAI>();
+        var ai = spawnMonster.GetComponent<MonsterController>();
         ai.InitAgent(spawnPos);
+        
+        return spawnMonster;
     }
 
     public static int GetRayCastLayer()

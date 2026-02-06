@@ -8,11 +8,18 @@ public abstract class LivingEntity : MonoBehaviour, IDamageables , IPoolable
 
     public void OnDespawn()
     {
+        
     }
 
     public void OnSpawn()
     {
         isDead = false;
+        hp = maxHp;
+    }
+
+    public void MultiplyMaxHp(float hp_Weight)
+    {
+        maxHp = (long)(maxHp * hp_Weight);
         hp = maxHp;
     }
 

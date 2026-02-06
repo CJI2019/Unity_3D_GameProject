@@ -12,21 +12,25 @@ public class UILevelUpSelect : MonoBehaviour
 
     public void UpdateSelect(List<AbilityData> abilityDatas)
     {
-        if(abilityDatas.Count < 3) return;
-
-        
         for(int i = 0; i < selectBtnList.Length; ++i)
         {
             var btn = selectBtnList[i];
-            var abilityData = abilityDatas[i];
             var txt_Name = btn.GetComponentInChildren<TMP_Text>();
-            txt_Name.text = abilityData.name;
 
-            UnityEngine.Events.UnityAction action = () => ChoiceAbility(btn,abilityData);
-            // 반복문 안에서 별도 변수에 담아야 올바르게 전달
-            btn.onClick.AddListener(action);
+            if(abilityDatas.Count > i){
+                var abilityData = abilityDatas[i];
+                txt_Name.text = abilityData.name;
 
-            actionMap[btn] = action;
+                UnityEngine.Events.UnityAction action = () => ChoiceAbility(btn,abilityData);
+                // 반복문 안에서 별도 변수에 담아야 올바르게 전달
+                btn.onClick.AddListener(action);
+
+                actionMap[btn] = action;
+            }
+            else
+            {
+                txt_Name.text = "None";
+            }
         }
 
         gameObject.SetActive(true);

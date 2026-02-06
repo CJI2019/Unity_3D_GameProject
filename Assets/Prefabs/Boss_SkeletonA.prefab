@@ -2781,8 +2781,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8007185223854756557}
+  - component: {fileID: -2310661752214696147}
   - component: {fileID: 2118703013856478089}
-  - component: {fileID: 8906573986547137694}
   - component: {fileID: 3281513335097680782}
   - component: {fileID: 6273436230046792688}
   - component: {fileID: 2504884315581586630}
@@ -2809,6 +2809,22 @@ Transform:
   - {fileID: 4339212403131058140}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-2310661752214696147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8146252999015667018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2daea40901b6c44fabf71f41dc88bcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterController
+  debugThisObjectLog: 0
+  autoClimbFlag: 0
+  moveSpeed: 5
+  pivotHeight: 0
 --- !u!195 &2118703013856478089
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2831,22 +2847,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 1
---- !u!114 &8906573986547137694
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8146252999015667018}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec9a9ac109fefc546a81a0d4a6183174, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
-  debugThisObjectLog: 0
-  autoClimbFlag: 0
-  moveSpeed: 5
-  pivotHeight: 0
 --- !u!54 &3281513335097680782
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2889,7 +2889,7 @@ MonoBehaviour:
   maxHp: 100
   hp: 1
   itemSpawnHeight: 1
-  damage: 1
+  originDamage: 1
 --- !u!136 &2504884315581586630
 CapsuleCollider:
   m_ObjectHideFlags: 0

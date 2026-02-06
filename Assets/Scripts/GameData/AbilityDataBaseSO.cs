@@ -40,7 +40,6 @@ public enum AbilityType
     BULLET,ORBIT,ITEMRANGE, SWORD, THUNDERSTRIKE
 }
 
-[System.Serializable]
 [CreateAssetMenu(fileName = "AbilityDataBaseSO", menuName = "Scriptable Objects/AbilityDataBaseSO")]
 public class AbilityDataBaseSO : ScriptableObject
 {

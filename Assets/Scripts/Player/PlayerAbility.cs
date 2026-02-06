@@ -24,7 +24,7 @@ public class PlayerAbility : LivingEntity
 
     int playerLevel = 1;
     int playerEXP = 0;
-    int playerLevelMaxEXP = 20;
+    int playerLevelMaxEXP = 10;
 
     void Start()
     {
@@ -83,6 +83,7 @@ public class PlayerAbility : LivingEntity
             playerEXP = 0;
             playerLevel += 1;
             OnLevelUp?.Invoke(playerLevel);
+            playerLevelMaxEXP = (int)(playerLevelMaxEXP * 1.5);
         }
 
         OnAddExp?.Invoke(this,new OnAddExpArgs(playerEXP,playerLevelMaxEXP));
@@ -104,7 +105,7 @@ public class PlayerAbility : LivingEntity
         }
     }
 
-    public Dictionary<AbilityType, AbilityData> GetHoldAbility()
+    public Dictionary<AbilityType, AbilityData> GetAbilities()
     {
         return myAbilities;
     }

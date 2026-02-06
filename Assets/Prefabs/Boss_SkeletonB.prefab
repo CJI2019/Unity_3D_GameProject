@@ -1148,8 +1148,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4997473143076293961}
+  - component: {fileID: -1144432221284878048}
   - component: {fileID: 1784024479942846599}
-  - component: {fileID: 7271485164296223914}
   - component: {fileID: 1633579408470273427}
   - component: {fileID: 759930455736073774}
   - component: {fileID: 8059372198140212173}
@@ -1176,6 +1176,22 @@ Transform:
   - {fileID: 4397248375594120815}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-1144432221284878048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3303323284037229804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2daea40901b6c44fabf71f41dc88bcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterController
+  debugThisObjectLog: 0
+  autoClimbFlag: 0
+  moveSpeed: 5
+  pivotHeight: 0
 --- !u!195 &1784024479942846599
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1198,22 +1214,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 1
---- !u!114 &7271485164296223914
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3303323284037229804}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec9a9ac109fefc546a81a0d4a6183174, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
-  debugThisObjectLog: 0
-  autoClimbFlag: 0
-  moveSpeed: 5
-  pivotHeight: 0
 --- !u!54 &1633579408470273427
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1253,10 +1253,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3ea3b0bb40416648988e7d87841a93a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Monster
-  maxHp: 1
+  maxHp: 200
   hp: 1
   itemSpawnHeight: 1
-  damage: 1
+  originDamage: 1
 --- !u!136 &8059372198140212173
 CapsuleCollider:
   m_ObjectHideFlags: 0

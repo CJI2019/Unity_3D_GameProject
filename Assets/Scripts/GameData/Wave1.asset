@@ -12,29 +12,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 294c8058b9b3b5c4fbef6c15672ac5f5, type: 3}
   m_Name: Wave1
   m_EditorClassIdentifier: Assembly-CSharp::WaveData
-  duration: 30
+  duration: 10
+  ability_Weight: 1
   spawnEntries:
   - monsterPoolKey: monster0
     count: 500
     spawnStartTime: 0
     pattern: 0
     spawnInterval: 0.3
+    hp_Weight: 1
+    damage_Weight: 1
+    isWaveBoss: 0
     circleRadius: 15
   - monsterPoolKey: monster1
     count: 200
     spawnStartTime: 0
     pattern: 0
     spawnInterval: 0.5
+    hp_Weight: 1
+    damage_Weight: 1
+    isWaveBoss: 0
     circleRadius: 15
   - monsterPoolKey: monster1
     count: 200
     spawnStartTime: 5
     pattern: 2
     spawnInterval: 0
+    hp_Weight: 1
+    damage_Weight: 1
+    isWaveBoss: 0
     circleRadius: 35
   - monsterPoolKey: BossA
     count: 1
-    spawnStartTime: 20
+    spawnStartTime: 5
     pattern: 0
     spawnInterval: 0
+    hp_Weight: 1
+    damage_Weight: 1
+    isWaveBoss: 1
     circleRadius: 35
+  expItemDB: {fileID: 11400000, guid: c0acd69262396004394986e165450c29, type: 2}
+  selectedExpItemEntry: {fileID: 11400000, guid: 3e650bfb941ffc647aa06d950f86b977, type: 2}

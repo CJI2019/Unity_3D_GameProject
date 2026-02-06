@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
-using static MonsterAI;
 
 public enum MonsterState
 {
@@ -192,40 +191,12 @@ public class MonsterAI : MonoBehaviour
         {
             // 움직임 멈춤
             if (isGamePaused) { return; }
-
-            // 직전 상태 저장
-            beforeState.useGravity        = rigidBody.useGravity;
-            beforeState.constraints       = rigidBody.constraints;
-            beforeState.agentVelocity     = agent.velocity;
-            beforeState.rbVelocity        = rigidBody.linearVelocity;
-            beforeState.rbAngularVelocity = rigidBody.angularVelocity;
-
-            // 물리력을 0으로 만들어 즉시 정지
-            isGamePaused              = true;
-            rigidBody.useGravity      = false;
-            rigidBody.constraints     = RigidbodyConstraints.FreezeAll;
-            agent.velocity            = Vector3.zero;
-
-            if (!rigidBody.isKinematic)
-            {
-                rigidBody.linearVelocity = Vector3.zero;
-                rigidBody.angularVelocity = Vector3.zero;
-            }
+            GamePauseSave();
             return;
         }
         else if (isGamePaused)
         {
-            // 직전 상태 로드
-            rigidBody.useGravity      = beforeState.useGravity;
-            rigidBody.constraints     = beforeState.constraints;
-            agent.velocity            = beforeState.agentVelocity;
-
-            if (!rigidBody.isKinematic)
-            {
-                rigidBody.angularVelocity = beforeState.rbAngularVelocity;
-                rigidBody.linearVelocity  = beforeState.rbVelocity;
-            }
-
+            GamePauseFinshLoad();
             isGamePaused = false;
         }
 
@@ -247,6 +218,42 @@ public class MonsterAI : MonoBehaviour
                 break;
             default:
                 break;
+        }
+    }
+
+    private void GamePauseFinshLoad()
+    {
+        // 직전 상태 로드
+        rigidBody.useGravity = beforeState.useGravity;
+        rigidBody.constraints = beforeState.constraints;
+        agent.velocity = beforeState.agentVelocity;
+
+        if (!rigidBody.isKinematic)
+        {
+            rigidBody.angularVelocity = beforeState.rbAngularVelocity;
+            rigidBody.linearVelocity = beforeState.rbVelocity;
+        }
+    }
+
+    private void GamePauseSave()
+    {
+        // 직전 상태 저장
+        beforeState.useGravity = rigidBody.useGravity;
+        beforeState.constraints = rigidBody.constraints;
+        beforeState.agentVelocity = agent.velocity;
+        beforeState.rbVelocity = rigidBody.linearVelocity;
+        beforeState.rbAngularVelocity = rigidBody.angularVelocity;
+
+        // 물리력을 0으로 만들어 즉시 정지
+        isGamePaused = true;
+        rigidBody.useGravity = false;
+        rigidBody.constraints = RigidbodyConstraints.FreezeAll;
+        agent.velocity = Vector3.zero;
+
+        if (!rigidBody.isKinematic)
+        {
+            rigidBody.linearVelocity = Vector3.zero;
+            rigidBody.angularVelocity = Vector3.zero;
         }
     }
 

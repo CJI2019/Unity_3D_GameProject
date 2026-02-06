@@ -12,10 +12,12 @@ public class WaveManager : MonoBehaviour
     int currentWaveIndex = 0;
     int initCount        = 0;
 
+    bool waveBossDead = true;
+
     void Awake()
     {
-        spawner.OnInit += Initalize;
-        dungeonBaker.onBakeComplete += Initalize;
+        spawner.OnInit += Initalize; // 풀 확보 대기
+        dungeonBaker.onBakeComplete += Initalize; // 던전 생성 대기
     }
 
     void Initalize()
@@ -27,34 +29,41 @@ public class WaveManager : MonoBehaviour
         }
     }
 
+    void WaveBossDeadFlag(Monster monster)
+    {
+        waveBossDead = true;
+    }
+
     IEnumerator ProcessWave()
     {
         while (currentWaveIndex < waves.Count)
         {
             WaveData currentWave = waves[currentWaveIndex];
-            
+
             // 현재 웨이브의 모든 스폰 항목 실행
             foreach (var entry in currentWave.spawnEntries)
             {
-                StartCoroutine(SpawnRoutine(entry));
+                if (entry.isWaveBoss) waveBossDead = false;
+                StartCoroutine(SpawnRoutine(currentWave,entry));
             }
 
-            
             // 웨이브 지속 시간만큼 대기
             yield return new WaitForSeconds(currentWave.duration);
-            
-            while (GameManager.Instance.IsGamePaused)
+
+            while (GameManager.Instance.IsGamePaused || !waveBossDead)
             {
                 yield return null;
             }
 
             currentWaveIndex++;
         }
+    
+        GameManager.Instance.GameFinished();
 
         Debug.Log("모든 웨이브가 끝났습니다.");
     }
 
-    IEnumerator SpawnRoutine(SpawnEntry entry)
+    IEnumerator SpawnRoutine(WaveData waveData,SpawnEntry entry)
     {
         // 스폰 시간 지연
         if (entry.spawnStartTime != 0)
@@ -70,7 +79,7 @@ public class WaveManager : MonoBehaviour
         Vector3 clumpAnchor = Vector3.zero;
         if (entry.pattern == SpawnPatternType.Clumped)
         {
-            clumpAnchor = MonsterSpawner.GetScatteredPosition(playerPos, 15f, 20f);
+            clumpAnchor = MonsterSpawner.GetScatteredPosition(playerPos, 20f, 30f);
         }
 
         float angleStep = 360f / entry.count;
@@ -90,7 +99,7 @@ public class WaveManager : MonoBehaviour
             switch (entry.pattern)
             {
                 case SpawnPatternType.Scattered:
-                    spawnPos = MonsterSpawner.GetScatteredPosition(playerPos, 20f, 30f);
+                    spawnPos = MonsterSpawner.GetScatteredPosition(playerPos, 25f, 35f);
                     break;
                 case SpawnPatternType.Clumped:
                     spawnPos = MonsterSpawner.GetClumpedPosition(clumpAnchor);
@@ -104,7 +113,15 @@ public class WaveManager : MonoBehaviour
             if (NavMesh.SamplePosition(spawnPos, out NavMeshHit hit, 10.0f, NavMesh.AllAreas))
             {
                 spawnPos = hit.position;
-                spawner.SpawnMonster(entry.monsterPoolKey, spawnPos);
+                Monster spawnMonster = spawner.SpawnMonster(entry.monsterPoolKey, spawnPos);
+                if (entry.isWaveBoss)
+                {
+                    spawnMonster.OnMonsterDead += WaveBossDeadFlag;
+                }
+
+                spawnMonster.MultiplyDamage(entry.damage_Weight * waveData.ability_Weight);
+                spawnMonster.MultiplyMaxHp(entry.hp_Weight * waveData.ability_Weight);
+                spawnMonster.SetExpItemEntry(waveData.GetSelectedExpItemEntry());
             }
             else
             {

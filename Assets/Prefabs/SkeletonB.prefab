@@ -1892,9 +1892,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1538781377310006991}
-  - component: {fileID: 2539730846385680222}
+  - component: {fileID: -2932841251064528484}
   - component: {fileID: 7547722262659822678}
-  - component: {fileID: 6715484807462511741}
   - component: {fileID: 3773965747369968835}
   - component: {fileID: 6524268043201718807}
   - component: {fileID: 1505153367435752384}
@@ -1921,28 +1920,22 @@ Transform:
   - {fileID: 5653462576062622719}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &2539730846385680222
-Animator:
-  serializedVersion: 7
+--- !u!114 &-2932841251064528484
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5493640805095960847}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 8624151ff76b77c489cd541f6427435f, type: 3}
-  m_Controller: {fileID: 9100000, guid: f85f203bdd1557743a18c16e308bccfd, type: 2}
-  m_CullingMode: 1
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2daea40901b6c44fabf71f41dc88bcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterController
+  debugThisObjectLog: 0
+  autoClimbFlag: 0
+  moveSpeed: 5
+  pivotHeight: 0
 --- !u!195 &7547722262659822678
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1965,22 +1958,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 1
---- !u!114 &6715484807462511741
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5493640805095960847}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec9a9ac109fefc546a81a0d4a6183174, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
-  debugThisObjectLog: 0
-  autoClimbFlag: 0
-  moveSpeed: 5
-  pivotHeight: 0
 --- !u!54 &3773965747369968835
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2023,7 +2000,7 @@ MonoBehaviour:
   maxHp: 1
   hp: 1
   itemSpawnHeight: 1
-  damage: 1
+  originDamage: 1
 --- !u!136 &1505153367435752384
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2507,6 +2484,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5653462576062622719}
+  - component: {fileID: 2130962316565536935}
   m_Layer: 7
   m_Name: Model
   m_TagString: Untagged
@@ -2531,6 +2509,28 @@ Transform:
   - {fileID: 6695034635066413835}
   m_Father: {fileID: 1538781377310006991}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &2130962316565536935
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6494904637648386074}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 8624151ff76b77c489cd541f6427435f, type: 3}
+  m_Controller: {fileID: 9100000, guid: f85f203bdd1557743a18c16e308bccfd, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &6508784442118104727
 GameObject:
   m_ObjectHideFlags: 0

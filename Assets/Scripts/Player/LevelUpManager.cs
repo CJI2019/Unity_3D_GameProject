@@ -1,24 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelUpManager : MonoBehaviour
+public class LevelUpManager : SceneSingleton<LevelUpManager>
 {
-    private static LevelUpManager _instance;
-    public static LevelUpManager Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = FindAnyObjectByType<LevelUpManager>();
-                if(_instance == null)
-                {
-                    Debug.Log("객체를 찾을 수 없습니다.");
-                }
-            }
-            return _instance;
-        }
-    }
     [SerializeField] UILevelUpSelect levelUpSelectUI;
     PlayerAbility player;
 
@@ -41,19 +25,21 @@ public class LevelUpManager : MonoBehaviour
 
     void OnSelectAbilityWindow(int level)
     {
-        GameManager.Instance.GamePaused(true);
         if(abilitySelectWait) return;
         
         var gam = GameAbilityManager.Instance;
-        levelUpSelectUI.UpdateSelect(gam.RandomAbilityList());
+        var randomList = gam.RandomAbilityList(player);
+        if(randomList.Count == 0) return;
+        levelUpSelectUI.UpdateSelect(randomList);
 
         abilitySelectWait = true;
+        GameManager.Instance.GamePaused(true);
     }
 
     public void ApplyChoiceAbility(AbilityData abilityData)
     {
         int level = 1;
-        var holdAbilitys = player.GetHoldAbility();
+        var holdAbilitys = player.GetAbilities();
 
         if (holdAbilitys.ContainsKey(abilityData.abilityType))
         {

@@ -10,52 +10,55 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 294c8058b9b3b5c4fbef6c15672ac5f5, type: 3}
-  m_Name: Wave2
+  m_Name: Wave3
   m_EditorClassIdentifier: Assembly-CSharp::WaveData
-  duration: 20
+  duration: 10
+  ability_Weight: 1
   spawnEntries:
   - monsterPoolKey: monster1
     count: 50
     spawnStartTime: 0
     pattern: 1
     spawnInterval: 0
+    hp_Weight: 1
+    damage_Weight: 1
+    isWaveBoss: 0
+    circleRadius: 15
   - monsterPoolKey: monster1
     count: 50
     spawnStartTime: 0
     pattern: 1
     spawnInterval: 0
+    hp_Weight: 1
+    damage_Weight: 1
+    isWaveBoss: 0
+    circleRadius: 15
   - monsterPoolKey: monster1
     count: 50
     spawnStartTime: 0
     pattern: 1
     spawnInterval: 0
-  - monsterPoolKey: monster1
-    count: 50
-    spawnStartTime: 0
-    pattern: 1
-    spawnInterval: 0
-  - monsterPoolKey: monster1
-    count: 50
+    hp_Weight: 1
+    damage_Weight: 1
+    isWaveBoss: 0
+    circleRadius: 15
+  - monsterPoolKey: BossB
+    count: 1
     spawnStartTime: 5
     pattern: 1
     spawnInterval: 0
-  - monsterPoolKey: monster1
-    count: 50
-    spawnStartTime: 5
-    pattern: 1
-    spawnInterval: 0
-  - monsterPoolKey: monster1
-    count: 50
-    spawnStartTime: 5
-    pattern: 1
-    spawnInterval: 0
-  - monsterPoolKey: monster1
-    count: 50
-    spawnStartTime: 5
-    pattern: 1
-    spawnInterval: 0
-  - monsterPoolKey: monster1
-    count: 50
-    spawnStartTime: 5
-    pattern: 1
-    spawnInterval: 0
+    hp_Weight: 1
+    damage_Weight: 1
+    isWaveBoss: 1
+    circleRadius: 15
+  - monsterPoolKey: monster0
+    count: 400
+    spawnStartTime: 10
+    pattern: 0
+    spawnInterval: 0.01
+    hp_Weight: 1
+    damage_Weight: 1
+    isWaveBoss: 0
+    circleRadius: 15
+  expItemDB: {fileID: 11400000, guid: c0acd69262396004394986e165450c29, type: 2}
+  selectedExpItemEntry: {fileID: 11400000, guid: 46b6d6b0a7ee0ea40aace4c89457b5fb, type: 2}

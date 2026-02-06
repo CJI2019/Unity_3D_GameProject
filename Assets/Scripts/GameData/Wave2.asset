@@ -1,0 +1,100 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 294c8058b9b3b5c4fbef6c15672ac5f5, type: 3}
+  m_Name: Wave2
+  m_EditorClassIdentifier: Assembly-CSharp::WaveData
+  duration: 10
+  ability_Weight: 1
+  spawnEntries:
+  - monsterPoolKey: monster1
+    count: 50
+    spawnStartTime: 0
+    pattern: 1
+    spawnInterval: 0
+    hp_Weight: 1
+    damage_Weight: 1
+    isWaveBoss: 0
+    circleRadius: 15
+  - monsterPoolKey: monster1
+    count: 50
+    spawnStartTime: 0
+    pattern: 1
+    spawnInterval: 0
+    hp_Weight: 1
+    damage_Weight: 1
+    isWaveBoss: 0
+    circleRadius: 15
+  - monsterPoolKey: monster1
+    count: 50
+    spawnStartTime: 0
+    pattern: 1
+    spawnInterval: 0
+    hp_Weight: 1
+    damage_Weight: 1
+    isWaveBoss: 0
+    circleRadius: 15
+  - monsterPoolKey: monster1
+    count: 50
+    spawnStartTime: 0
+    pattern: 1
+    spawnInterval: 0
+    hp_Weight: 1
+    damage_Weight: 1
+    isWaveBoss: 0
+    circleRadius: 15
+  - monsterPoolKey: monster1
+    count: 50
+    spawnStartTime: 5
+    pattern: 1
+    spawnInterval: 0
+    hp_Weight: 1
+    damage_Weight: 1
+    isWaveBoss: 0
+    circleRadius: 15
+  - monsterPoolKey: monster1
+    count: 50
+    spawnStartTime: 5
+    pattern: 1
+    spawnInterval: 0
+    hp_Weight: 1
+    damage_Weight: 1
+    isWaveBoss: 0
+    circleRadius: 15
+  - monsterPoolKey: monster1
+    count: 50
+    spawnStartTime: 5
+    pattern: 1
+    spawnInterval: 0
+    hp_Weight: 1
+    damage_Weight: 1
+    isWaveBoss: 0
+    circleRadius: 15
+  - monsterPoolKey: monster1
+    count: 50
+    spawnStartTime: 5
+    pattern: 1
+    spawnInterval: 0
+    hp_Weight: 1
+    damage_Weight: 1
+    isWaveBoss: 0
+    circleRadius: 15
+  - monsterPoolKey: monster1
+    count: 50
+    spawnStartTime: 5
+    pattern: 1
+    spawnInterval: 0
+    hp_Weight: 1
+    damage_Weight: 1
+    isWaveBoss: 0
+    circleRadius: 15
+  expItemDB: {fileID: 11400000, guid: c0acd69262396004394986e165450c29, type: 2}
+  selectedExpItemEntry: {fileID: 11400000, guid: d8c24be74e07e284193773e1a2527b9d, type: 2}

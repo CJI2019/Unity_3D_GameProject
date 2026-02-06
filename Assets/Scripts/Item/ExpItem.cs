@@ -12,5 +12,10 @@ public class ExpItem : PickUp
         playerAbility?.AddExp(exp);
 
         DropItemManager.Instance.ItemDeSpawn(this);
-    }    
+    }
+
+    public void SetExp(int exp)
+    {
+        this.exp = exp;
+    }
 }
