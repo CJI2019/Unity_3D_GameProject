@@ -2,5 +2,5 @@ using UnityEngine;
 
 public interface IDamageables
 {
-	void TakeDamage(long amount);
+	void TakeDamage(Transform transform, long amount);
 }

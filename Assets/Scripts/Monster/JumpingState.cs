@@ -16,4 +16,10 @@ public class JumpingState : IMonsterState
     public void FixedExecute() { }
 
     public void Exit() { }
+    public bool CanExit(IMonsterState nextState)
+    { 
+        if(nextState is HitState) return false;
+        return true; 
+    }
+
 }

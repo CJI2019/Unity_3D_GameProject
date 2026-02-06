@@ -43,4 +43,10 @@ public class ClimbState : IMonsterState
     }
 
     public void Exit() { }
+    public bool CanExit(IMonsterState nextState)
+    { 
+        if(nextState is HitState) return false;
+        return true; 
+    }
+
 }

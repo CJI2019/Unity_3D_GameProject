@@ -8,6 +8,7 @@ public class Monster : LivingEntity , IAttacker
     [SerializeField] long originDamage     = 1;
 
     public event Action<Monster> OnMonsterDead;
+    // public event Action<Monster> OnMonsterDead;
     string poolKey = "";
 
     public float AttackRange {get;}
@@ -23,7 +24,7 @@ public class Monster : LivingEntity , IAttacker
 
     public void Attack(Collider other)
     {
-        other.GetComponent<LivingEntity>()?.TakeDamage(damage);
+        other.GetComponent<LivingEntity>()?.TakeDamage(transform,damage);
     }
 
     public void MultiplyDamage(float damage_Weight)
@@ -41,13 +42,14 @@ public class Monster : LivingEntity , IAttacker
         this.poolKey = poolKey;
     }
 
-    public override void TakeDamage(long amount)
+    public override void TakeDamage(Transform attacker, long amount)
     {
         if(isDead) return;
 
-        base.TakeDamage(amount);
-        
-        
+        base.TakeDamage(attacker,amount);
+
+        var monsterController = GetComponent<MonsterController>();
+        monsterController.ChangeState(new HitState(monsterController,attacker));
     }
 
     protected override void DeathLogic()

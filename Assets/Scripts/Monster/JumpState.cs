@@ -9,6 +9,7 @@ public class JumpState : IMonsterState
     public void Enter() 
     {
         if (_monster.DebugOn) Debug.Log("몬스터: 점프...");
+        _monster.SetJumpState();
     }
 
     public void Execute()
@@ -22,4 +23,10 @@ public class JumpState : IMonsterState
     public void FixedExecute() { }
 
     public void Exit() { }
+    public bool CanExit(IMonsterState nextState)
+    { 
+        if(nextState is HitState) return false;
+        return true; 
+    }
+
 }

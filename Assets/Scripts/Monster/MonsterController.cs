@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 public class MonsterController : MonoBehaviour
 {
@@ -10,11 +11,11 @@ public class MonsterController : MonoBehaviour
     [SerializeField] float moveSpeed         = 5.0f;
     [SerializeField] float pivotHeight       = 1f;
 
-    IMonsterState currentState;
+    public Rigidbody rigidBody {get;set;}
 
+    IMonsterState currentState;
     Transform target;
     NavMeshAgent agent;
-    Rigidbody rigidBody;
     Collider goCollider;
 
     float startAgentDelay        = 0f;
@@ -63,6 +64,7 @@ public class MonsterController : MonoBehaviour
         startAgentDelay = Time.time + 1f;
         agent.velocity  = Vector3.zero;
         agent.speed     = moveSpeed;
+        goCollider.includeLayers |= MonsterSpawner.GetRayCastLayer();
         ChangeState(new ChaseState(this));
     }
 
@@ -105,6 +107,11 @@ public class MonsterController : MonoBehaviour
 
     public void ChangeState(IMonsterState newState)
     {
+        if(currentState != null)
+        {
+            if(!currentState.CanExit(newState)) return;
+        }
+
         currentState?.Exit();
         currentState = newState;
         currentState.Enter();
@@ -130,12 +137,6 @@ public class MonsterController : MonoBehaviour
         // 피봇이 하단에 있을 경우 미세한 오차로 인해 점프가 발동하지 않는 경우가 있어 Vector3.up 올린 위치에서 레이캐스트를 쏜다.
         if (!Physics.Raycast(transform.position + Vector3.up, (direction + Vector3.down).normalized, 5f, MonsterSpawner.GetRayCastLayer(), QueryTriggerInteraction.Ignore))
         {
-            agent.enabled = false;
-            rigidBody.isKinematic = false;
-            goCollider.includeLayers ^= MonsterSpawner.GetRayCastLayer();
-            
-            // 점프의 힘이 가해진 직후 단차로 인해 충돌이 발생하여 낙하하지 않는 현상을 방지하기 위해 딜레이를 준다.
-            StartCoroutine(DelaySetCollisionMask(0.5f));
             result = true;
         }
 
@@ -145,6 +146,25 @@ public class MonsterController : MonoBehaviour
         }
 
         return result;
+    }
+
+    public void SetJumpState()
+    {
+        agent.enabled = false;
+        rigidBody.isKinematic = false;
+        goCollider.includeLayers ^= MonsterSpawner.GetRayCastLayer();
+
+        if (gameObject.activeSelf)
+        {
+            // 점프의 힘이 가해진 직후 단차로 인해 충돌이 발생하여 낙하하지 않는 현상을 방지하기 위해 딜레이를 준다.
+            StartCoroutine(DelaySetCollisionMask(0.5f));
+        }
+    }
+
+    public void SetHitState()
+    {
+        agent.enabled = false;
+        rigidBody.isKinematic = false;
     }
 
     IEnumerator DelaySetCollisionMask(float delay)

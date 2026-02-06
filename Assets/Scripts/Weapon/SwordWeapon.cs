@@ -10,7 +10,7 @@ public class SwordWeapon : WeaponBase
 
     Transform playerModelTransform;
     ParticleSystem slashVFX;
-    Collider[] hits = new Collider[100]; // ¸ó½ºÅÍ Ãæµ¹Ã¼ ÀúÀå¿ë
+    Collider[] hits = new Collider[100]; // ï¿½ï¿½ï¿½ï¿½ ï¿½æµ¹Ã¼ ï¿½ï¿½ï¿½ï¿½ï¿½
 
     Vector3 defaultWeaponScale;
 
@@ -37,7 +37,7 @@ public class SwordWeapon : WeaponBase
             playerModelTransform = owner.GetComponent<PlayerController>().GetPlayerModelTransform();
         }
 
-        // ·£´ý Offset ÁÖ±â
+        // ï¿½ï¿½ï¿½ï¿½ Offset ï¿½Ö±ï¿½
         var offsetVector = (playerModelTransform.right + playerModelTransform.up).normalized
             * (Random.value - 0.5f) * weaponScale;
         
@@ -76,14 +76,13 @@ public class SwordWeapon : WeaponBase
             var hit = hits[i];
             Vector3 dir = (hit.transform.position - center).normalized;
 
-            // forward¿Í dir »çÀÌÀÇ ÄÚ»çÀÎ °ª
             float dot = Vector3.Dot(forward, dir);
 
             if (dot >= cosHalfAngle)
             {
                 //Debug.DrawLine(center, hit.transform.position, Color.green, 1.0f);
                 var damageble = hit.GetComponent<IDamageables>();
-                damageble?.TakeDamage(damage);
+                damageble?.TakeDamage(owner.transform,damage);
             }
         }
     }

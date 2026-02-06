@@ -23,7 +23,7 @@ public abstract class LivingEntity : MonoBehaviour, IDamageables , IPoolable
         hp = maxHp;
     }
 
-    public virtual void TakeDamage(long amount)
+    public virtual void TakeDamage(Transform attacker, long amount)
     {
         if(isDead) return;
     

@@ -18,7 +18,7 @@ public abstract class WeaponBase : MonoBehaviour , IPoolable , IWeapon
     public virtual void Attack(Collider other)
     {
         var entity = other.GetComponent<LivingEntity>();
-        entity.TakeDamage(damage);
+        entity.TakeDamage(owner.transform,damage);
     }
 
     protected virtual void Awake()

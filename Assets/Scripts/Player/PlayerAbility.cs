@@ -110,9 +110,9 @@ public class PlayerAbility : LivingEntity
         return myAbilities;
     }
 
-    public override void TakeDamage(long amount)
+    public override void TakeDamage(Transform transform, long amount)
     {
-        base.TakeDamage(amount);
+        base.TakeDamage(transform,amount);
         Debug.Log($"Player HP : {hp}");
     }
 

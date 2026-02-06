@@ -27,7 +27,7 @@ public class ThunderStrikeWeapon : WeaponBase
         this.damage = damage;
 
         transform.SetParent(PoolManager.Instance.transform);
-        // ÇÃ·¹ÀÌ¾î Áß½ÉÀÇ ±¸Ã¼ ¹üÀ§ ³»¿¡¼­ ¹«ÀÛÀ§ À§Ä¡ ¼³Á¤
+        // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ß½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
         Vector3 randomPos = owner.position + Random.onUnitSphere * AttackRange;
         RaycastHit hitInfo;
         if (!Physics.Raycast(randomPos, Vector3.down, out hitInfo, 100f, MonsterSpawner.GetRayCastLayer(), QueryTriggerInteraction.Ignore))
@@ -35,7 +35,7 @@ public class ThunderStrikeWeapon : WeaponBase
             if (!Physics.Raycast(randomPos, Vector3.up, out hitInfo, 100f, MonsterSpawner.GetRayCastLayer(), QueryTriggerInteraction.Ignore))
             {
                 manager.DeActiveWeapon(this);
-                return; // °ø°Ý À§Ä¡¸¦ Ã£Áö ¸øÇÔ
+                return; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             }
         }
         transform.position = hitInfo.point;
@@ -67,12 +67,12 @@ public class ThunderStrikeWeapon : WeaponBase
         {
             var hit = hits[i];
 
-            // ±¸Ã¼ Áß½Éº¸´Ù À§¿¡ ÀÖ´Â Àû¿¡°Ô¸¸ µ¥¹ÌÁö Àû¿ë
+            // ï¿½ï¿½Ã¼ ï¿½ß½Éºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ô¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             if (hit.transform.position.y > center.y)
             {
                 Debug.DrawLine(center, hit.transform.position, Color.green, 1.0f);
                 var damageble = hit.GetComponent<IDamageables>();
-                damageble?.TakeDamage(damage);
+                damageble?.TakeDamage(owner.transform, damage);
             }
         }
     }

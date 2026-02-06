@@ -39,4 +39,9 @@ public class ChaseState : IMonsterState
     }
 
     public void Exit() { }
+    public bool CanExit(IMonsterState nextState)
+    {       
+        return true;
+    }
+
 }
