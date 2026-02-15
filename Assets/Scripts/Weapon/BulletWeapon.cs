@@ -81,7 +81,5 @@ public class BulletWeapon : WeaponBase
         {
             manager.DeActiveWeapon(this);
         }
-
-        //Hit Effect 발동 등 추가
     }
 }

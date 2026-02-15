@@ -10,7 +10,7 @@ public class SwordWeapon : WeaponBase
 
     Transform playerModelTransform;
     ParticleSystem slashVFX;
-    Collider[] hits = new Collider[100]; // ���� �浹ü �����
+    Collider[] hits = new Collider[100]; 
 
     Vector3 defaultWeaponScale;
 
@@ -37,7 +37,6 @@ public class SwordWeapon : WeaponBase
             playerModelTransform = owner.GetComponent<PlayerController>().GetPlayerModelTransform();
         }
 
-        // ���� Offset �ֱ�
         var offsetVector = (playerModelTransform.right + playerModelTransform.up).normalized
             * (Random.value - 0.5f) * weaponScale;
         

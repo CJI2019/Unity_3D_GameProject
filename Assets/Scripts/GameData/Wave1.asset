@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Wave1
   m_EditorClassIdentifier: Assembly-CSharp::WaveData
   duration: 10
-  ability_Weight: 1
+  ability_Weight: 10
   spawnEntries:
   - monsterPoolKey: monster0
     count: 500

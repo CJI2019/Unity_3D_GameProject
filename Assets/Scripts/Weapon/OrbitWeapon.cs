@@ -6,12 +6,10 @@ public class OrbitWeapon : WeaponBase
     [SerializeField] float distance = 4f;
 
     float rotateSpeed = 100f;
-    Vector3 defaultWeaponScale;
 
     protected override void Awake()
     {
         base.Awake();
-        defaultWeaponScale = transform.localScale;
     }
 
     public void Initialize(float angle,float rotateSpeed, long damage)

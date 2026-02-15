@@ -100,7 +100,6 @@ GameObject:
   - component: {fileID: 2458926194860386628}
   - component: {fileID: 5257959776305593444}
   - component: {fileID: 6475434776975100841}
-  - component: {fileID: 1838465785627782785}
   - component: {fileID: 8371371990585446791}
   - component: {fileID: 1061579955005299983}
   - component: {fileID: 3589079201592200929}
@@ -184,20 +183,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &1838465785627782785
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3502586761481919134}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec9a9ac109fefc546a81a0d4a6183174, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
-  testMoveFlag: 0
-  velocity: 1
 --- !u!195 &8371371990585446791
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -234,6 +219,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Monster
   maxHp: 1
   hp: 1
+  itemSpawnHeight: 1
+  originDamage: 1
 --- !u!54 &3589079201592200929
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -1,23 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
-using Mono.Cecil;
 using UnityEngine;
 using UnityEngine.AI;
+
 public class WaveManager : MonoBehaviour
 {
     [SerializeField] MonsterSpawner spawner;
     [SerializeField] DungeonBaker dungeonBaker;
     [SerializeField] List<WaveData> waves; // 웨이브 데이터
 
+    Transform player;
     int currentWaveIndex = 0;
     int initCount        = 0;
-
     bool waveBossDead = true;
 
     void Awake()
     {
         spawner.OnInit += Initalize; // 풀 확보 대기
         dungeonBaker.onBakeComplete += Initalize; // 던전 생성 대기
+    }
+
+    void Start()
+    {
+        player = GameObject.FindWithTag("Player").transform;
     }
 
     void Initalize()
@@ -71,7 +76,6 @@ public class WaveManager : MonoBehaviour
             yield return new WaitForSeconds(entry.spawnStartTime);
         }
 
-        Transform player            = GameObject.FindWithTag("Player").transform;
         Vector3 playerPos           = GetPlayerUnderPos(player);
         float lastPlayerPosSyncTime = Time.time;
 
@@ -89,39 +93,20 @@ public class WaveManager : MonoBehaviour
         {
             Vector3 spawnPos = Vector3.zero;
             // 플레이어 좌표 갱신
-            if(lastPlayerPosSyncTime < Time.time - 3f)
+            if (lastPlayerPosSyncTime < Time.time - 3f)
             {
-                playerPos             = GetPlayerUnderPos(player);
+                playerPos = GetPlayerUnderPos(player);
                 lastPlayerPosSyncTime = Time.time;
             }
 
             // 패턴에 따른 위치 결정
-            switch (entry.pattern)
-            {
-                case SpawnPatternType.Scattered:
-                    spawnPos = MonsterSpawner.GetScatteredPosition(playerPos, 25f, 35f);
-                    break;
-                case SpawnPatternType.Clumped:
-                    spawnPos = MonsterSpawner.GetClumpedPosition(clumpAnchor);
-                    break;
-                case SpawnPatternType.Circle:
-                    spawnPos = MonsterSpawner.GetCirclePos(playerPos,entry.circleRadius,i,angleStep);
-                    break;
-            }
+            spawnPos = PatternSpawnPos(entry, playerPos, clumpAnchor, angleStep, i, spawnPos);
 
             // NavMesh 위에 유효한 위치인지 확인
             if (NavMesh.SamplePosition(spawnPos, out NavMeshHit hit, 10.0f, NavMesh.AllAreas))
             {
                 spawnPos = hit.position;
-                Monster spawnMonster = spawner.SpawnMonster(entry.monsterPoolKey, spawnPos);
-                if (entry.isWaveBoss)
-                {
-                    spawnMonster.OnMonsterDead += WaveBossDeadFlag;
-                }
-
-                spawnMonster.MultiplyDamage(entry.damage_Weight * waveData.ability_Weight);
-                spawnMonster.MultiplyMaxHp(entry.hp_Weight * waveData.ability_Weight);
-                spawnMonster.SetExpItemEntry(waveData.GetSelectedExpItemEntry());
+                SpawnMonsterSetting(waveData, entry, spawnPos);
             }
             else
             {
@@ -145,6 +130,37 @@ public class WaveManager : MonoBehaviour
                 yield return null;
             }
         }
+    }
+
+    void SpawnMonsterSetting(WaveData waveData, SpawnEntry entry, Vector3 spawnPos)
+    {
+        Monster spawnMonster = spawner.SpawnMonster(entry.monsterPoolKey, spawnPos);
+        if (entry.isWaveBoss)
+        {
+            spawnMonster.OnMonsterDead += WaveBossDeadFlag;
+        }
+
+        spawnMonster.MultiplyDamage(entry.damage_Weight * waveData.ability_Weight);
+        spawnMonster.MultiplyMaxHp(entry.hp_Weight * waveData.ability_Weight);
+        spawnMonster.SetExpItemEntry(waveData.GetSelectedExpItemEntry());
+    }
+
+    Vector3 PatternSpawnPos(SpawnEntry entry, Vector3 playerPos, Vector3 clumpAnchor, float angleStep, int angleStepCount, Vector3 spawnPos)
+    {
+        switch (entry.pattern)
+        {
+            case SpawnPatternType.Scattered:
+                spawnPos = MonsterSpawner.GetScatteredPosition(playerPos, 25f, 35f);
+                break;
+            case SpawnPatternType.Clumped:
+                spawnPos = MonsterSpawner.GetClumpedPosition(clumpAnchor);
+                break;
+            case SpawnPatternType.Circle:
+                spawnPos = MonsterSpawner.GetCirclePos(playerPos, entry.circleRadius, angleStep,angleStepCount);
+                break;
+        }
+
+        return spawnPos;
     }
 
     Vector3 GetPlayerUnderPos(Transform player)

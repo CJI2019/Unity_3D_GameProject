@@ -8,12 +8,12 @@ public class Monster : LivingEntity , IAttacker
     [SerializeField] long originDamage     = 1;
 
     public event Action<Monster> OnMonsterDead;
-    // public event Action<Monster> OnMonsterDead;
-    string poolKey = "";
 
     public float AttackRange {get;}
     public float AttackCoolDown {get;}
 
+    string poolKey = "";
+    int mob_Id;
     long damage;
     ExpItemEntry expItemEntry;
 
@@ -40,6 +40,11 @@ public class Monster : LivingEntity , IAttacker
     public void SetPoolKey(string poolKey)
     {
         this.poolKey = poolKey;
+    }
+    
+    public void SetMonsterId(int monsterId)
+    {
+        mob_Id = monsterId;
     }
 
     public override void TakeDamage(Transform attacker, long amount)

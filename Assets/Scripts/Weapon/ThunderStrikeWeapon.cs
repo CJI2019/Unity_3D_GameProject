@@ -27,7 +27,6 @@ public class ThunderStrikeWeapon : WeaponBase
         this.damage = damage;
 
         transform.SetParent(PoolManager.Instance.transform);
-        // �÷��̾� �߽��� ��ü ���� ������ ������ ��ġ ����
         Vector3 randomPos = owner.position + Random.onUnitSphere * AttackRange;
         RaycastHit hitInfo;
         if (!Physics.Raycast(randomPos, Vector3.down, out hitInfo, 100f, MonsterSpawner.GetRayCastLayer(), QueryTriggerInteraction.Ignore))
@@ -35,7 +34,7 @@ public class ThunderStrikeWeapon : WeaponBase
             if (!Physics.Raycast(randomPos, Vector3.up, out hitInfo, 100f, MonsterSpawner.GetRayCastLayer(), QueryTriggerInteraction.Ignore))
             {
                 manager.DeActiveWeapon(this);
-                return; // ���� ��ġ�� ã�� ����
+                return;
             }
         }
         transform.position = hitInfo.point;
@@ -67,7 +66,6 @@ public class ThunderStrikeWeapon : WeaponBase
         {
             var hit = hits[i];
 
-            // ��ü �߽ɺ��� ���� �ִ� �����Ը� ������ ����
             if (hit.transform.position.y > center.y)
             {
                 Debug.DrawLine(center, hit.transform.position, Color.green, 1.0f);

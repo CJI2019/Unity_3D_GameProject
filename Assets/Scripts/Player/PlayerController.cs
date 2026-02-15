@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
     float verticalVelocity = 0f;
     bool isJump            = false;
     bool triggerJump       = false;
-    bool isGrounded        = true;
+    bool isGrounded        = false;
 
     void Start()
     {
@@ -61,7 +61,6 @@ public class PlayerController : MonoBehaviour
                 airVelocity.Set(moveDir.x * airControlFactor, 0f, moveDir.z * airControlFactor);
                 triggerJump = true;
                 animator.SetBool(string_bool_IsFalling, false);
-                animator.SetBool(string_bool_IsGrounded, false);
                 animator.SetBool(string_bool_IsJumping, true);
             }
             else
@@ -69,7 +68,6 @@ public class PlayerController : MonoBehaviour
                 verticalVelocity = 0f;
                 airVelocity.Set(0f, 0f, 0f);
                 lastGroundMoveDir.Set(0f, 0f, 0f);
-                animator.SetBool(string_bool_IsGrounded, true);
                 animator.SetBool(string_bool_IsFalling, false);
             }
         }
@@ -87,6 +85,8 @@ public class PlayerController : MonoBehaviour
     {
         Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - groundOffset, transform.position.z);
         isGrounded = Physics.CheckSphere(spherePosition, groundRadius, groundLayer, QueryTriggerInteraction.Ignore);
+        animator.SetBool(string_bool_IsGrounded, isGrounded);
+
     }
 
     private void OnDrawGizmosSelected()

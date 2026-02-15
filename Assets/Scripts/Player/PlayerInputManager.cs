@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PlayerInputManager : MonoBehaviour
 {
-    [SerializeField] bool isCursorLocak = true;
+    [SerializeField] bool isCursorLock = true;
     PlayerInput playerInput;
     public Vector2 move;
     public bool jump = false;
@@ -11,7 +11,7 @@ public class PlayerInputManager : MonoBehaviour
     void Start()
     {
         playerInput = GetComponent<PlayerInput>();
-        SetCursorLockMode(isCursorLocak);
+        SetCursorLockMode(isCursorLock);
     }
 
     public void OnMove(InputValue value)

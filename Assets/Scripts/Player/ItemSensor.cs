@@ -67,7 +67,7 @@ public class ItemSensor : MonoBehaviour
         this.level = abilityData.level;
 
         UpdateSensor();
-        Debug.Log(abilityData.name + "를 " + abilityData.level + "로 설정");
+        // Debug.Log(abilityData.name + "를 " + abilityData.level + "로 설정");
     }
 
     public AbilityData GetAbilityData()

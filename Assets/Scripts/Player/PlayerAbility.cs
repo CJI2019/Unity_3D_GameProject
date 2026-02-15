@@ -11,10 +11,6 @@ public class PlayerAbility : LivingEntity
     public event EventHandler<OnAddExpArgs> OnAddExp;
     public event Action<int> OnLevelUp;
     
-    // PlayerAbility 는 매니저를 통해 랜덤 로직을 거쳐 데이터를 뽑는 작업이 필요하다.
-    // 예) 무기의 종류 여러개 중 1개를 획득 등
-    // 매니저에는 게임에서 능력을 어떻게 가져올 지를 정하는 메서드를 둔다.
-    // 매니저와 PlayerAbility를 분리하여 코드의 복잡성을 줄이는 이점도 있다.
     GameAbilityManager gameAbilityMgr;
     PlayerController playerController;
     PlayerWeapon playerWeapon;
@@ -113,7 +109,7 @@ public class PlayerAbility : LivingEntity
     public override void TakeDamage(Transform transform, long amount)
     {
         base.TakeDamage(transform,amount);
-        Debug.Log($"Player HP : {hp}");
+        // Debug.Log($"Player HP : {hp}");
     }
 
     protected override void DeathLogic()
@@ -124,7 +120,7 @@ public class PlayerAbility : LivingEntity
             return;
         }
 
-        Debug.Log("Player Dead");
+        // Debug.Log("Player Dead");
         playerController.GetPlayerAnimation().SetBool("IsDead", true);
     }
 }

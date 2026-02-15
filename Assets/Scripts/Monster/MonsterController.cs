@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UIElements;
@@ -22,7 +23,7 @@ public class MonsterController : MonoBehaviour
     bool isGamePaused            = false;
 
     // 클래스 전용 구조체
-    public struct BeforeState
+    public struct PauseSaveData
     {
         public bool useGravity;
         public RigidbodyConstraints constraints;
@@ -30,7 +31,7 @@ public class MonsterController : MonoBehaviour
         public Vector3 rbVelocity;
         public Vector3 rbAngularVelocity;
     }
-    BeforeState beforeState;
+    PauseSaveData beforeState;
 
     void Awake()
     {
@@ -124,7 +125,6 @@ public class MonsterController : MonoBehaviour
         currentState.FixedExecute();
     }
 
-    // --- 헬퍼 함수들 (AI 로직) ---
     public bool RaycastHitsObstacle(Vector3 direction)
     {
         return !Physics.Raycast(transform.position, direction, 5f, MonsterSpawner.GetRayCastLayer(), QueryTriggerInteraction.Ignore);
@@ -156,7 +156,7 @@ public class MonsterController : MonoBehaviour
 
         if (gameObject.activeSelf)
         {
-            // 점프의 힘이 가해진 직후 단차로 인해 충돌이 발생하여 낙하하지 않는 현상을 방지하기 위해 딜레이를 준다.
+            // 점프의 힘이 가해진 직후 단차로 인해 충돌이 발생하여 점프하지 않는 현상을 방지하기 위해 딜레이를 준다.
             StartCoroutine(DelaySetCollisionMask(0.5f));
         }
     }
