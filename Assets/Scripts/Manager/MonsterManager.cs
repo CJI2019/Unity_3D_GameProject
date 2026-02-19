@@ -1,53 +1,156 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
-public class MonsterManager : MonoBehaviour
+public struct MonsterData
 {
-    Dictionary<int,GameObject> monsters = new();
-    [SerializeField] Mesh monsterMesh;
-    [SerializeField] Material monsterMat;
+    public Mesh mesh;
+    public Material material;
+    public int animTexture_Height;
+    public float sharedScale;
+}
 
+public struct InstancingData
+{
+    public Matrix4x4[] matrix4X4s;
+    public float sharedScale;
+    public MaterialPropertyBlock propertyBlock;
+    public float[] currentFrame;
+}
 
-    void Start()
+public class MonsterManager : SceneSingleton<MonsterManager>
+{
+    [SerializeField] float frameSpeed = 1f;
+
+    Dictionary<int,KeyValuePair<string, GameObject>> activeMonsters = new();
+    Dictionary<string,List<InstancingData>> instancingDataListByPoolkey = new();
+    Dictionary<string,MonsterData> keyByMonsterData = new();
+    // poolKey별로 현재 몇 번째 인덱스까지 채웠는지 저장하는 딕셔너리
+    Dictionary<string, int> poolCounts = new();
+    IdPool idPool = new();
+
+    public void AddMonsterData(string poolKey,Mesh mesh, Material material, float sharedScale = 1.0f)
     {
-        
+        var monsterData = new MonsterData();
+        monsterData.mesh = mesh;
+        monsterData.material = material;
+        monsterData.sharedScale = sharedScale;
+
+        var anim_Tex = material.GetTexture("_AnimTex");
+        monsterData.animTexture_Height = anim_Tex.height;
+
+        material.enableInstancing = true;
+
+        keyByMonsterData.Add(poolKey,monsterData);
+    }
+
+    void ExtendInstanceData(string poolKey)
+    {
+        instancingDataListByPoolkey[poolKey] = new List<InstancingData>();
+
+        InstancingData instancingData = new InstancingData();
+        instancingData.matrix4X4s = new Matrix4x4[1023];
+        for (int i = 0; i < instancingData.matrix4X4s.Length; ++i)
+        {
+            instancingData.matrix4X4s[i] = Matrix4x4.identity;
+        }
+        instancingData.propertyBlock = new MaterialPropertyBlock();
+        instancingData.currentFrame = new float[1023];
+
+        MonsterData monsterData =  keyByMonsterData[poolKey];
+        instancingData.sharedScale = monsterData.sharedScale;
+
+        instancingDataListByPoolkey[poolKey].Add(instancingData);
     }
 
     void Update()
     {
-        var monsterList = FindObjectsByType<Monster>(FindObjectsSortMode.None);
+        poolCounts.Clear();
 
-        foreach (var monster in monsterList)
+        foreach (var kvp in activeMonsters)
         {
-            monster.GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
+            string poolKey = kvp.Value.Key;
+            GameObject go = kvp.Value.Value;
+
+            if (!poolCounts.TryGetValue(poolKey, out int currentCount))
+            {
+                currentCount = 0;
+            }
+
+            int listIndex = currentCount / 1023;
+            int arrayIndex = currentCount % 1023;
+
+            if (!instancingDataListByPoolkey.ContainsKey(poolKey))
+            {
+                Debug.LogError(poolKey + " 가 존재하지 않습니다.");
+                return;
+            }
+
+            if (instancingDataListByPoolkey[poolKey].Count <= listIndex)
+            {
+                ExtendInstanceData(poolKey);
+            }
+
+            instancingDataListByPoolkey[poolKey][listIndex].matrix4X4s[arrayIndex] = go.transform.localToWorldMatrix;
+
+            poolCounts[poolKey] = currentCount + 1;
         }
-        
-        Matrix4x4[] matrices = new Matrix4x4[monsterList.Length];
 
-        for (int i = 0; i < monsterList.Length; i++) {
-            Vector3 pos = monsterList[i].transform.position; 
-            Quaternion rot = monsterList[i].transform.rotation;
+        RenderInstances();
+    }
 
-            matrices[i] = Matrix4x4.TRS(pos, rot, Vector3.one);
+    void RenderInstances()
+    {
+        foreach (var poolEntry in poolCounts)
+        {
+            string poolKey = poolEntry.Key;
+            int totalCount = poolEntry.Value;
+            
+            if (!instancingDataListByPoolkey.TryGetValue(poolKey, out var instancingDataList)) continue;
+
+            Mesh mesh = keyByMonsterData[poolKey].mesh;
+            Material material = keyByMonsterData[poolKey].material;
+            int frameCount = keyByMonsterData[poolKey].animTexture_Height;
+
+            int remainingCount = totalCount;
+            for (int i = 0; i < instancingDataList.Count; ++i)
+            {
+                if (remainingCount <= 0) break;
+
+                int drawCount = Mathf.Min(remainingCount, 1023);
+
+                InstancingData instancingData = instancingDataList[i];
+                for(int j = 0; j < drawCount; ++j) 
+                {
+                    instancingData.currentFrame[j] = (Time.time * frameSpeed + j) % frameCount;
+                }
+                instancingData.propertyBlock.SetFloatArray("_CurrentFrame", instancingData.currentFrame);
+                instancingData.propertyBlock.SetFloat("_SharedScale",instancingData.sharedScale);
+
+                Graphics.DrawMeshInstanced(mesh, 0, material, instancingData.matrix4X4s, drawCount,instancingData.propertyBlock);
+                remainingCount -= drawCount;
+            }
+        }
+    }
+
+    public int AddMontser(string poolKey, GameObject monster)
+    {
+        if (!instancingDataListByPoolkey.ContainsKey(poolKey))
+        {
+            ExtendInstanceData(poolKey);
         }
 
-        Graphics.DrawMeshInstanced(monsterMesh, 0, monsterMat, matrices, monsterList.Length);
+        int id = idPool.GetId();
+
+        activeMonsters.Add(id,new KeyValuePair<string, GameObject>(poolKey,monster));
+
+        return id;
     }
 
-    void AddMontser(int id, GameObject monster)
+    public void RemoveMonster(int id)
     {
-        monsters.Add(id,monster);
+        activeMonsters.Remove(id);
+        idPool.ReturnId(id);
     }
-
-    void RemoveMonster(int id)
-    {
-        monsters.Remove(id);
-    }
-
-    public GameObject GetMonster(int id)
-    {
-        return monsters[id];
-    }
-
 }

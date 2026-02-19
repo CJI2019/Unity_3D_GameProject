@@ -9,26 +9,24 @@ public class MonsterObject
 {
     public Monster prefab;
     public string poolKey;
+    public Mesh mesh;
+    public Material material;
+    public float sharedScale;
 }
 
 public class MonsterSpawner : MonoBehaviour
 {
-    [SerializeField] Transform player;
     [SerializeField] List<MonsterObject> monsterList;
-    [SerializeField] int monsterCountLimit = 500;
     [Tooltip("몬스터 제한수가 스폰되었을 때 활성화 몬스터와 총 몬스터의 로그를 출력")]
     [SerializeField] bool isDebugActiveLog = false;
+
 
     public event Action OnInit;
 
     static int rayCastingLayerMask = 0;
 
-    Dictionary<int,NavMeshAgent> activeMonsterList = new Dictionary<int, NavMeshAgent>();
-
     void Awake()
     {
-        NavMesh.pathfindingIterationsPerFrame = monsterCountLimit;
-
         rayCastingLayerMask = 1 << LayerMask.NameToLayer("Default");
     }
 
@@ -39,6 +37,8 @@ public class MonsterSpawner : MonoBehaviour
             var monster     = monsterList[i];
             var monsterPool = new GenericObjectPool<Monster>(monster.prefab, 1, transform);
             PoolManager.Instance.RegisterPool(monster.poolKey, monsterPool);
+
+            MonsterManager.Instance.AddMonsterData(monster.poolKey,monster.mesh,monster.material,monster.sharedScale);
         }
 
         OnInit.Invoke();
@@ -99,6 +99,9 @@ public class MonsterSpawner : MonoBehaviour
 
         var ai = spawnMonster.GetComponent<MonsterController>();
         ai.InitAgent(spawnPos);
+
+        int id = MonsterManager.Instance.AddMontser(poolKey,spawnMonster.gameObject);
+        spawnMonster.SetMonsterId(id);
         
         return spawnMonster;
     }
