@@ -9,18 +9,6 @@ public class ThunderStrikeWeapon : WeaponBase
     Collider[] hits = new Collider[100];
     Vector3 defaultWeaponScale;
 
-    protected override void Awake()
-    {
-        base.Awake();
-        thunderStrikeVFX = GetComponent<ParticleSystem>();
-        defaultWeaponScale = transform.localScale;
-    }
-
-    protected override void Start()
-    {
-        base.Start();
-    }
-
     public void Initialize(ThunderStrikeWeaponManager myMgr, long damage,float weaponScale)
     {
         manager = myMgr;
@@ -48,7 +36,19 @@ public class ThunderStrikeWeapon : WeaponBase
         ));
     }
 
-    private void Update()
+    protected override void Awake()
+    {
+        base.Awake();
+        thunderStrikeVFX = GetComponent<ParticleSystem>();
+        defaultWeaponScale = transform.localScale;
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+    }
+
+    protected override void WeaponUpdate() 
     {
         if (!thunderStrikeVFX.IsAlive(true))
         {

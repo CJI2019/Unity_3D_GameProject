@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using UnityEngine;
 
 public struct MonsterData
@@ -19,7 +17,7 @@ public struct InstancingData
     public float[] currentFrame;
 }
 
-public class MonsterManager : SceneSingleton<MonsterManager>
+public class MonsterInstacingManager : SceneSingleton<MonsterInstacingManager>
 {
     [SerializeField] float frameSpeed = 1f;
 
@@ -43,6 +41,26 @@ public class MonsterManager : SceneSingleton<MonsterManager>
         material.enableInstancing = true;
 
         keyByMonsterData.Add(poolKey,monsterData);
+    }
+
+    public int AddMontser(string poolKey, GameObject monster)
+    {
+        if (!instancingDataListByPoolkey.ContainsKey(poolKey))
+        {
+            ExtendInstanceData(poolKey);
+        }
+
+        int id = idPool.GetId();
+
+        activeMonsters.Add(id,new KeyValuePair<string, GameObject>(poolKey,monster));
+
+        return id;
+    }
+
+    public void RemoveMonster(int id)
+    {
+        activeMonsters.Remove(id);
+        idPool.ReturnId(id);
     }
 
     void ExtendInstanceData(string poolKey)
@@ -121,10 +139,15 @@ public class MonsterManager : SceneSingleton<MonsterManager>
                 int drawCount = Mathf.Min(remainingCount, 1023);
 
                 InstancingData instancingData = instancingDataList[i];
-                for(int j = 0; j < drawCount; ++j) 
+
+                if(!GameManager.Instance.IsGamePaused) // 게임 중지시에 애니메이션 프레임을 고정한다.
                 {
-                    instancingData.currentFrame[j] = (Time.time * frameSpeed + j) % frameCount;
+                    for(int j = 0; j < drawCount; ++j) 
+                    {
+                        instancingData.currentFrame[j] = (Time.time * frameSpeed + j) % frameCount;
+                    }
                 }
+
                 instancingData.propertyBlock.SetFloatArray("_CurrentFrame", instancingData.currentFrame);
                 instancingData.propertyBlock.SetFloat("_SharedScale",instancingData.sharedScale);
 
@@ -132,25 +155,5 @@ public class MonsterManager : SceneSingleton<MonsterManager>
                 remainingCount -= drawCount;
             }
         }
-    }
-
-    public int AddMontser(string poolKey, GameObject monster)
-    {
-        if (!instancingDataListByPoolkey.ContainsKey(poolKey))
-        {
-            ExtendInstanceData(poolKey);
-        }
-
-        int id = idPool.GetId();
-
-        activeMonsters.Add(id,new KeyValuePair<string, GameObject>(poolKey,monster));
-
-        return id;
-    }
-
-    public void RemoveMonster(int id)
-    {
-        activeMonsters.Remove(id);
-        idPool.ReturnId(id);
     }
 }

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 294c8058b9b3b5c4fbef6c15672ac5f5, type: 3}
   m_Name: Wave3
   m_EditorClassIdentifier: Assembly-CSharp::WaveData
-  duration: 10
-  ability_Weight: 1
+  duration: 30
+  ability_Weight: 10
   spawnEntries:
   - monsterPoolKey: monster1
     count: 50

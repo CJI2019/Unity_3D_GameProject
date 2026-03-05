@@ -7,11 +7,6 @@ public class OrbitWeapon : WeaponBase
 
     float rotateSpeed = 100f;
 
-    protected override void Awake()
-    {
-        base.Awake();
-    }
-
     public void Initialize(float angle,float rotateSpeed, long damage)
     {
         // 회전 시작 로컬 위치 및 로컬 각도 조정
@@ -22,7 +17,12 @@ public class OrbitWeapon : WeaponBase
         this.rotateSpeed = rotateSpeed;
     }
 
-    void Update()
+    protected override void Awake()
+    {
+        base.Awake();
+    }
+
+    protected override void WeaponUpdate() 
     {
         // 회전하면서 닿는 모든 생명체에게 데미지를 가하므로 추가적인 공격 로직은 필요없음.
         OrbitAroundTarget();

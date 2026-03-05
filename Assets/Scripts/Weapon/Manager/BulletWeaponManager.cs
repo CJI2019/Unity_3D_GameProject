@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BulletWeaponManager : WeaponManager
@@ -11,14 +10,6 @@ public class BulletWeaponManager : WeaponManager
     float bulletSpawnDelay = 0.1f;
 
     int penetrationCount = 1;
-
-    void Start()
-    {
-        SetPoolKey(poolKey);
-        RegisterWeapon(weaponPrefab,poolKey);
-
-        enabled = false;
-    }
 
     public override void SetWeaponData(AbilityData abilityData)
     {
@@ -45,12 +36,20 @@ public class BulletWeaponManager : WeaponManager
         }
     }
 
-    void Update()
+    protected override void UpdateManager()
     {
         if (lastAttackTime > Time.time) return;
         lastAttackTime = Time.time + attackInterval;
 
         StartCoroutine(SpawnBullet(bulletSpawnDelay));
+    }
+
+    void Start()
+    {
+        SetPoolKey(poolKey);
+        RegisterWeapon(weaponPrefab,poolKey);
+
+        enabled = false;
     }
 
     IEnumerator SpawnBullet(float delay)

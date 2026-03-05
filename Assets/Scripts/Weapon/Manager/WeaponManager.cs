@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public abstract class WeaponManager : MonoBehaviour
@@ -7,25 +6,10 @@ public abstract class WeaponManager : MonoBehaviour
     [SerializeField] protected float attackInterval = 2f;
 
     protected List<IWeapon> spawnedWeapons;
-    string poolKey;
     protected AbilityData weaponData;
+    string poolKey;
 
-    //추상 메서드
-    public virtual void UpdateWeapons()
-    {
-
-    }
-
-    void Awake()
-    {
-        spawnedWeapons = new List<IWeapon>();
-    }
-
-    // 활성화된 무기를 활성화 그룹에 추가한다.
-    void ActiveWeapon(IWeapon iWeapon)
-    {
-        spawnedWeapons.Add(iWeapon);
-    }
+    public virtual void UpdateWeaponAbility() {}
 
     // 무기 데이터를 설정한다.
     // 영구 유지 무기와 활성/비활성 무기에 따라 처리가 다를 수 있다.
@@ -40,7 +24,12 @@ public abstract class WeaponManager : MonoBehaviour
             enabled = true;
         }
     }
-   
+
+    public void DeActiveWeapon<T>(T weapon) where T : Component, IPoolable, IWeapon
+    {
+        PoolManager.Instance.Return(poolKey, weapon);
+    }
+    
     protected void SetPoolKey(string poolKey)
     {
         this.poolKey = poolKey;
@@ -59,10 +48,6 @@ public abstract class WeaponManager : MonoBehaviour
 
         return weapon;
     }
-    public void DeActiveWeapon<T>(T weapon) where T : Component, IPoolable, IWeapon
-    {
-        PoolManager.Instance.Return(poolKey, weapon);
-    }
 
     protected void AddWeapon<T>(int count) where T : Component, IPoolable, IWeapon
     {
@@ -78,7 +63,7 @@ public abstract class WeaponManager : MonoBehaviour
             weapon.transform.SetParent(transform);
         }
 
-        UpdateWeapons();
+        UpdateWeaponAbility();
     }
 
     // 무기 종류를 활성 그룹에서 제거한다.
@@ -95,5 +80,25 @@ public abstract class WeaponManager : MonoBehaviour
 
         spawnedWeapons.Clear();
     }
+    
+    protected virtual void UpdateManager() {}
 
+    void Awake()
+    {
+        spawnedWeapons = new List<IWeapon>();
+    }
+
+    void Update()
+    {
+        if(GameManager.Instance.IsGamePaused) return;
+        UpdateManager();
+    }
+
+    // 활성화된 무기를 활성화 그룹에 추가한다.
+    void ActiveWeapon(IWeapon iWeapon)
+    {
+        spawnedWeapons.Add(iWeapon);
+    }
+
+    
 }

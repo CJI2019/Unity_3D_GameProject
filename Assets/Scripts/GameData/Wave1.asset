@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 294c8058b9b3b5c4fbef6c15672ac5f5, type: 3}
   m_Name: Wave1
   m_EditorClassIdentifier: Assembly-CSharp::WaveData
-  duration: 10
-  ability_Weight: 10
+  duration: 30
+  ability_Weight: 1
   spawnEntries:
   - monsterPoolKey: monster0
     count: 500
@@ -44,7 +44,7 @@ MonoBehaviour:
     circleRadius: 35
   - monsterPoolKey: BossA
     count: 1
-    spawnStartTime: 5
+    spawnStartTime: 25
     pattern: 0
     spawnInterval: 0
     hp_Weight: 1

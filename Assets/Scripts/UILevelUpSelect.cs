@@ -1,7 +1,6 @@
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine;
-using System;
 using System.Collections.Generic;
 
 public class UILevelUpSelect : MonoBehaviour
@@ -57,6 +56,6 @@ public class UILevelUpSelect : MonoBehaviour
         var inputMgr = FindFirstObjectByType<PlayerInputManager>();
         inputMgr.SetCursorLockMode(true);
 
-        Init();
+        Init(); // 선택 후 초기화
     }
 }

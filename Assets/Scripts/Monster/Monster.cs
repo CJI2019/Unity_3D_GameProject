@@ -72,7 +72,7 @@ public class Monster : LivingEntity , IAttacker
         OnMonsterDead = null;
         
         PoolManager.Instance.Return<Monster>(poolKey,this);
-        MonsterManager.Instance.RemoveMonster(mob_Id);
+        MonsterInstacingManager.Instance.RemoveMonster(mob_Id);
     }
 
     private void OnTriggerEnter(Collider other)

@@ -9,14 +9,7 @@ public class ThunderStrikeWeaponManager : WeaponManager
 
     float lastAttackTime = 0f;
     float weaponSpawnDelay = 0.1f;
-
-    void Start()
-    {
-        SetPoolKey(poolKey);
-        RegisterWeapon(weaponPrefab, poolKey);
-
-        enabled = false;
-    }
+    
     public override void SetWeaponData(AbilityData abilityData)
     {
         base.SetWeaponData(abilityData);
@@ -42,12 +35,20 @@ public class ThunderStrikeWeaponManager : WeaponManager
         }
     }
 
-    void Update()
+    protected override void UpdateManager()
     {
         if (lastAttackTime > Time.time) return;
         lastAttackTime = Time.time + attackInterval;
 
         StartCoroutine(SpawnWeapon(weaponSpawnDelay));
+    }
+
+    void Start()
+    {
+        SetPoolKey(poolKey);
+        RegisterWeapon(weaponPrefab, poolKey);
+
+        enabled = false;
     }
 
     IEnumerator SpawnWeapon(float delay)

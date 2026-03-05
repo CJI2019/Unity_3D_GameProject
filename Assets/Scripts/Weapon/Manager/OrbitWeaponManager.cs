@@ -42,7 +42,7 @@ public class OrbitWeaponManager : WeaponManager
         }
     }
 
-    public override void UpdateWeapons()
+    public override void UpdateWeaponAbility()
     {
         var length = spawnedWeapons.Count;
 
@@ -55,4 +55,5 @@ public class OrbitWeaponManager : WeaponManager
             orbitWeapon.Initialize(angle, rotateSpeed,weaponData.damage);
         }
     }    
+
 }

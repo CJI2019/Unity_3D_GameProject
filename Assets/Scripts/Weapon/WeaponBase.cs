@@ -21,6 +21,22 @@ public abstract class WeaponBase : MonoBehaviour , IPoolable , IWeapon
         entity.TakeDamage(owner.transform,damage);
     }
 
+    public virtual void OnSpawn()
+    {
+        
+    }
+    public virtual void OnDespawn()
+    {
+
+    }
+
+    public void SetAttackRange(float range)
+    {
+        attackRange = range;
+    }
+
+    protected virtual void WeaponUpdate() {}
+
     protected virtual void Awake()
     {
         owner = FindFirstObjectByType<PlayerWeapon>().transform;
@@ -40,22 +56,16 @@ public abstract class WeaponBase : MonoBehaviour , IPoolable , IWeapon
         }
     }
 
-    public virtual void OnSpawn()
-    {
-
-    }
-    public virtual void OnDespawn()
-    {
-
-    }
-
     void OnTriggerEnter(Collider other)
     {
         HandleTrigger(other);
     }
 
-    public void SetAttackRange(float range)
+    void Update()
     {
-        attackRange = range;
+        if(GameManager.Instance.IsGamePaused) return;
+
+        WeaponUpdate();
     }
+
 }

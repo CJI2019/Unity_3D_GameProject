@@ -14,18 +14,6 @@ public class SwordWeapon : WeaponBase
 
     Vector3 defaultWeaponScale;
 
-    protected override void Awake()
-    {
-        base.Awake();
-        slashVFX = GetComponent<ParticleSystem>();
-        defaultWeaponScale = transform.localScale;
-    }
-
-    protected override void Start()
-    {
-        base.Start();
-    }
-
     public void Initialize(SwordWeaponManager myMgr,float weaponScale, long damage)
     {
         manager = myMgr;
@@ -54,7 +42,19 @@ public class SwordWeapon : WeaponBase
         ));
     }
 
-    private void Update()
+    protected override void Awake()
+    {
+        base.Awake();
+        slashVFX = GetComponent<ParticleSystem>();
+        defaultWeaponScale = transform.localScale;
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+    }
+
+    protected override void WeaponUpdate() 
     {
         if (!slashVFX.IsAlive(true))
         {

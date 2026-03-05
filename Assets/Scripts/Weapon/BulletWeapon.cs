@@ -24,7 +24,18 @@ public class BulletWeapon : WeaponBase
         dir = GetDirectionToClosestMonster();
     }
 
-    void Update()
+    public override void Attack(Collider other)
+    {
+        base.Attack(other);
+
+        --penetrationCount;
+        if (penetrationCount <= 0)
+        {
+            manager.DeActiveWeapon(this);
+        }
+    }
+
+    protected override void WeaponUpdate()
     {
         if (dir != Vector3.zero)
         {
@@ -71,15 +82,5 @@ public class BulletWeapon : WeaponBase
         }
         return Vector3.zero; // 없으면 (0,0,0)
     }
-
-    public override void Attack(Collider other)
-    {
-        base.Attack(other);
-
-        --penetrationCount;
-        if (penetrationCount <= 0)
-        {
-            manager.DeActiveWeapon(this);
-        }
-    }
+    
 }

@@ -112,7 +112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3ea3b0bb40416648988e7d87841a93a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Monster
-  maxHp: 100
+  maxHp: 20
   hp: 1
   itemSpawnHeight: 1
   originDamage: 1

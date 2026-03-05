@@ -38,7 +38,7 @@ public class MonsterSpawner : MonoBehaviour
             var monsterPool = new GenericObjectPool<Monster>(monster.prefab, 1, transform);
             PoolManager.Instance.RegisterPool(monster.poolKey, monsterPool);
 
-            MonsterManager.Instance.AddMonsterData(monster.poolKey,monster.mesh,monster.material,monster.sharedScale);
+            MonsterInstacingManager.Instance.AddMonsterData(monster.poolKey,monster.mesh,monster.material,monster.sharedScale);
         }
 
         OnInit.Invoke();
@@ -100,7 +100,7 @@ public class MonsterSpawner : MonoBehaviour
         var ai = spawnMonster.GetComponent<MonsterController>();
         ai.InitAgent(spawnPos);
 
-        int id = MonsterManager.Instance.AddMontser(poolKey,spawnMonster.gameObject);
+        int id = MonsterInstacingManager.Instance.AddMontser(poolKey,spawnMonster.gameObject);
         spawnMonster.SetMonsterId(id);
         
         return spawnMonster;

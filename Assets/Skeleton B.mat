@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: New Material
+  m_Name: Skeleton B
   m_Shader: {fileID: 4800000, guid: e33d97e2a3fc4d04890a49b32beaff9a, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
