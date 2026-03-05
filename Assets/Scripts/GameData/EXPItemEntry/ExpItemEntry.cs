@@ -12,6 +12,7 @@ public class ExpItemEntry : ScriptableObject
 {
     public int exp; // 경험치 량
     public MeshEntry meshEntry;
+    public Color color;
 
     public string GetMeshId()
     {

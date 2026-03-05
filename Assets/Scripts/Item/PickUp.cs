@@ -9,4 +9,6 @@ public abstract class PickUp : MonoBehaviour , IPoolable
     public void OnSpawn() {}   
 
     public abstract void PickUpLogic(Collider player);
+
+    
 }

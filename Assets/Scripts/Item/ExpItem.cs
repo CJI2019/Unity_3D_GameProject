@@ -3,6 +3,7 @@ using UnityEngine;
 public class ExpItem : PickUp
 {
     [SerializeField] int exp = 1;
+    MeshRenderer meshRenderer;
 
     public override void PickUpLogic(Collider player)
     {
@@ -12,8 +13,19 @@ public class ExpItem : PickUp
         DropItemManager.Instance.ItemDeSpawn(this);
     }
 
-    public void SetExp(int exp)
+    public void SetExpItemEntry(ExpItemEntry entry)
     {
-        this.exp = exp;
+        this.exp = entry.exp;
+        SetColor(entry.color);
+    }
+
+    void SetColor(Color color)
+    {
+        meshRenderer.material.color = color;
+    }
+
+    void Awake()
+    {
+        meshRenderer = GetComponent<MeshRenderer>();
     }
 }

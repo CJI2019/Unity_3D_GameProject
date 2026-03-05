@@ -16,3 +16,4 @@ MonoBehaviour:
   meshEntry:
     id: CRYSTAL
     meshAsset: {fileID: -284775291732773546, guid: dd7028f27d1d4524f8624c129112b51f, type: 3}
+  color: {r: 0.15159893, g: 0, b: 1, a: 0}

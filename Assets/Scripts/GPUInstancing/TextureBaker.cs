@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEditor; 
 
+#if UNITY_EDITOR
 public class TextureBaker : MonoBehaviour
 {
     [SerializeField] SkinnedMeshRenderer targetRenderer;
@@ -79,3 +80,5 @@ public class TextureBaker : MonoBehaviour
         Debug.Log($"파일 저장 완료: {path}");
     }
 }
+
+#endif

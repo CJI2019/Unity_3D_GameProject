@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
 public class SelectGizmo : MonoBehaviour
 {
     [SerializeField] Transform targetObject;
@@ -77,3 +78,4 @@ public class SelectGizmo : MonoBehaviour
         Handles.DrawSolidArc(drawCenter, Vector3.up, targetObject.forward, -angle * 0.5f, radius);
     }
 }
+#endif

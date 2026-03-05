@@ -6,6 +6,8 @@ using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
+
 public class CsvImporter : EditorWindow
 {
     // CSV 파일 경로 (Assets 폴더 기준)
@@ -103,3 +105,4 @@ public class CsvImporter : EditorWindow
         return results;
     }
 }
+#endif

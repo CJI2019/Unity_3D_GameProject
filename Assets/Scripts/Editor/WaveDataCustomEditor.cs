@@ -2,6 +2,7 @@ using UnityEditor;
 using UnityEngine;
 using System.Linq;
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(WaveData))]
 public class WaveDataCustomEditor : Editor
 {
@@ -41,3 +42,4 @@ public class WaveDataCustomEditor : Editor
         }
     }
 }
+#endif

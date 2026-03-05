@@ -65,7 +65,7 @@ public class Monster : LivingEntity , IAttacker
         {
             exp.transform.position = transform.position + Vector3.up * itemSpawnHeight;
             MeshManager.Instance.SwapMesh(exp.gameObject,expItemEntry.GetMeshId());
-            exp.SetExp(expItemEntry.exp);
+            exp.SetExpItemEntry(expItemEntry);
         }
         
         OnMonsterDead?.Invoke(this);
