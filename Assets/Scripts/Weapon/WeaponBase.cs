@@ -1,4 +1,3 @@
-using UnityEditor.Search;
 using UnityEngine;
 
 public abstract class WeaponBase : MonoBehaviour , IPoolable , IWeapon

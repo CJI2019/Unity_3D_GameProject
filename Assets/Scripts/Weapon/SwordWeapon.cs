@@ -1,6 +1,4 @@
 using System.Collections;
-using TreeEditor;
-using Unity.AppUI.UI;
 using UnityEngine;
 
 public class SwordWeapon : WeaponBase
