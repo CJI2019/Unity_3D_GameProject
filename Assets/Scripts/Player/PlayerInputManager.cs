@@ -14,6 +14,11 @@ public class PlayerInputManager : MonoBehaviour
         SetCursorLockMode(isCursorLock);
     }
 
+    public void OnGodMode(InputValue value)
+    {
+        GetComponent<PlayerAbility>()?.SetGodMode();
+    }
+
     public void OnMove(InputValue value)
     {
         move = value.Get<Vector2>();

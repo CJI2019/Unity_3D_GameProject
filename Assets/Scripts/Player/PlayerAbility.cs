@@ -14,38 +14,11 @@ public class PlayerAbility : LivingEntity
     PlayerController playerController;
     PlayerWeapon playerWeapon;
     ItemSensor itemSensor;
-
     Dictionary<AbilityType, AbilityData> myAbilities = new Dictionary<AbilityType, AbilityData>();
 
     int playerLevel = 1;
     int playerEXP = 0;
     int playerLevelMaxEXP = 10;
-
-    void Start()
-    {
-        itemSensor = GetComponentInChildren<ItemSensor>();
-        playerController = GetComponent<PlayerController>();
-        hp = maxHp;
-    }
-
-    void OnEnable()
-    {
-        gameAbilityMgr = GameAbilityManager.Instance;
-        gameAbilityMgr.OnInit += GameStartAbility;  
-    }
-
-    void OnDisable()
-    {
-        gameAbilityMgr.OnInit -= GameStartAbility;
-    }
-
-    void GameStartAbility()
-    {
-        playerWeapon = GetComponent<PlayerWeapon>();
-
-        AbilityData weapon = GameAbilityManager.Instance.GetRandomWeapon();
-        SyncAbility(weapon);
-    }
 
     public void SyncAbility(AbilityData data)
     {
@@ -111,6 +84,47 @@ public class PlayerAbility : LivingEntity
         // Debug.Log($"Player HP : {hp}");
     }
 
+    public void SetGodMode()
+    {
+        godMode = !godMode;
+
+        if (godMode)
+        {
+            Debug.Log("GodMode On");
+        }
+        else
+        {
+            Debug.Log("GodMode Off");
+            isDead = false;
+        }
+    }
+
+    void Start()
+    {
+        itemSensor = GetComponentInChildren<ItemSensor>();
+        playerController = GetComponent<PlayerController>();
+        hp = maxHp;
+    }
+
+    void OnEnable()
+    {
+        gameAbilityMgr = GameAbilityManager.Instance;
+        gameAbilityMgr.OnInit += GameStartAbility;  
+    }
+
+    void OnDisable()
+    {
+        gameAbilityMgr.OnInit -= GameStartAbility;
+    }
+
+    void GameStartAbility()
+    {
+        playerWeapon = GetComponent<PlayerWeapon>();
+
+        AbilityData weapon = GameAbilityManager.Instance.GetRandomWeapon();
+        SyncAbility(weapon);
+    }
+
     protected override void DeathLogic()
     {
         if (godMode)
@@ -121,5 +135,7 @@ public class PlayerAbility : LivingEntity
 
         // Debug.Log("Player Dead");
         playerController.GetPlayerAnimation().SetBool("IsDead", true);
+
+        GameManager.Instance.GameFinished();
     }
 }

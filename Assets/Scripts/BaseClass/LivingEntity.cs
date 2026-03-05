@@ -6,6 +6,10 @@ public abstract class LivingEntity : MonoBehaviour, IDamageables , IPoolable
     [SerializeField] protected long hp = 10;
     protected bool isDead = false;
 
+    public bool IsDead {
+        get {return isDead;}
+    }
+    
     public void OnDespawn()
     {
         

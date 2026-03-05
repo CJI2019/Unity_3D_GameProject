@@ -62,8 +62,13 @@ public class WaveManager : MonoBehaviour
 
             currentWaveIndex++;
         }
-    
-        GameManager.Instance.GameFinished();
+
+        var playerLiving = player.GetComponent<LivingEntity>();
+        
+        if (playerLiving != null && !playerLiving.IsDead)
+        {
+            GameManager.Instance.GameFinished();
+        }
 
         Debug.Log("모든 웨이브가 끝났습니다.");
     }
