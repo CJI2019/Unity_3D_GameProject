@@ -125,6 +125,7 @@ public class MonsterInstacingManager : SceneSingleton<MonsterInstacingManager>
             string poolKey = poolEntry.Key;
             int totalCount = poolEntry.Value;
             
+            // poolKey에 해당하는 몬스터의 활성화가 1마리라도 되어 있는지 확인한다. (리스트가 존재하면 활성화 된 것)
             if (!instancingDataListByPoolkey.TryGetValue(poolKey, out var instancingDataList)) continue;
 
             Mesh mesh = keyByMonsterData[poolKey].mesh;
@@ -132,6 +133,7 @@ public class MonsterInstacingManager : SceneSingleton<MonsterInstacingManager>
             int frameCount = keyByMonsterData[poolKey].animTexture_Height;
 
             int remainingCount = totalCount;
+            // 활성화 되어 있는 몬스터들을 1023마리식 GPU 인스턴싱을 진행한다.
             for (int i = 0; i < instancingDataList.Count; ++i)
             {
                 if (remainingCount <= 0) break;
@@ -140,7 +142,7 @@ public class MonsterInstacingManager : SceneSingleton<MonsterInstacingManager>
 
                 InstancingData instancingData = instancingDataList[i];
 
-                if(!GameManager.Instance.IsGamePaused) // 게임 중지시에 애니메이션 프레임을 고정한다.
+                if(!GameManager.Instance.IsGamePaused) // 게임 중지시에 애니메이션 프레임 고정.
                 {
                     for(int j = 0; j < drawCount; ++j) 
                     {

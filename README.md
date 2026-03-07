@@ -41,3 +41,4 @@
 * [WaveManager.cs](Assets/Scripts/Manager/WaveManager.cs)                           - 몬스터 Wave 시스템 모듈
 * [MonsterSpawner.cs](Assets/Scripts/Manager/MonsterSpawner.cs)                     - 몬스터 생성 관리 모듈
 * [MonsterInstacingManager.cs](Assets/Scripts/Manager/MonsterInstacingManager.cs)   - 몬스터 인스턴싱 렌더링 모듈
+* [TextureBaker.cs](Assets\Scripts\GPUInstancing\TextureBaker.cs)                   - VAT Tool

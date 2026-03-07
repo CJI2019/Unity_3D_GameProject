@@ -81,8 +81,8 @@ public class WFCGenerator : MonoBehaviour
 
                 //////////////////////////////////
                 // 과정을 눈으로 보기 위해 딜레이
-                //DrawMap(); // 맵 그리기
-                //yield return new WaitForSeconds(0.005f); 
+                // DrawMap(); // 맵 그리기
+                // yield return new WaitForSeconds(0.005f); 
                 //////////////////////////////////
             }
             if (CheckIsolatedIsland())

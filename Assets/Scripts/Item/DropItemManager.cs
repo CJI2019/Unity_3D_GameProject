@@ -72,6 +72,7 @@ public class DropItemManager : SceneSingleton<DropItemManager>
     {
         while (true)
         {
+            // 아이템을 끌어당기면서 마지막 요소부터 리스트에서 제거한다.
             for (int i = items.Count - 1; i >= 0; --i)
             {
                 var item = items[i];
@@ -86,6 +87,7 @@ public class DropItemManager : SceneSingleton<DropItemManager>
 
             yield return null;
 
+            // 게임 일시 정지 대기
             while(GameManager.Instance.IsGamePaused) {
                 yield return null;
             }
