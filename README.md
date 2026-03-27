@@ -24,7 +24,7 @@
 ( .cs 클릭 시 코드로 이동합니다.)
 
 ### 스키닝 메시 GPU 인스턴싱 및 VAT(Virtual Animation Texture) 툴
-* [TextureBaker.cs](Assets\Scripts\GPUInstancing\TextureBaker.cs)                   - VAT Tool
+* [TextureBaker.cs](Assets/Scripts/GPUInstancing/TextureBaker.cs)                   - VAT Tool
 
 <img src="./images/monster2.jpg" alt="monstergif" width="400" />
 
